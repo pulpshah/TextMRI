@@ -1,7 +1,7 @@
 {
-  "name": "@text-mri",
+  "name": "@pulp/text-mri",
   "version": "1.0.0",
-  "description": "",
+  "description": "TextMRI is a tool that analyzes debates, providing statistics, information about speeches, persuasive resonance, and more.",
   "main": "index.js",
   "type": "module",
   "license": "AGPL-version-3.0",
@@ -13,14 +13,12 @@
   "homepage": "",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/PulpInternet/TextMRI"
   },
   "bugs": "",
   "keywords": [],
   "author": {
-    "name": "Eric Lam",
-    "email": "",
-    "url": ""
+    "name": "Eric Lam"
   },
   "contributors": [],
   "scripts": {
