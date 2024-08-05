@@ -1,0 +1,40 @@
+{
+  "name": "@text-mri",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "license": "AGPL-version-3.0",
+  "private": false,
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": "",
+  "keywords": [],
+  "author": {
+    "name": "Eric Lam",
+    "email": "",
+    "url": ""
+  },
+  "contributors": [],
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": ""
+  },
+  "dependencies": {
+    "@apollo/server": "^4.10.5",
+    "@neo4j/graphql": "^5.5.2",
+    "dotenv": "^16.4.5",
+    "graphql": "^16.9.0",
+    "neo4j-driver": "^5.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
