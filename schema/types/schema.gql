@@ -16,6 +16,7 @@ type text {
 }
 
 type text_transcript {
+  transcript_name: String!
   transcript: String!
   mustContainText: text @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainActor: actor @relationship(type: "MUST_CONTAIN", direction: OUT)
