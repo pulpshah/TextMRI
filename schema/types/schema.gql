@@ -127,7 +127,7 @@ type Color {
 }
 
 type Entity {
-  Id: Int!
+  id: Int!
   imagetranscriptMayContain: ImageTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
@@ -145,9 +145,9 @@ type Document {
   content: [String!]
   role: String!
   textIs: Text @relationship(type: "IS", direction: IN)
-  mustContainEthos: ethos @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainPathos: pathos @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainLogos: logos @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainEthos: Ethos @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainPathos: Pathos @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainLogos: Logos @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainStyle: Style @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainSoundstylistic: SoundStylistic @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainEuphony: Euphony @relationship(type: "MUST_CONTAIN", direction: OUT)
@@ -159,7 +159,7 @@ type Document {
 }
 
 type Paragraph {
-  Paragraph_number: Int!
+  paragraph_number: Int!
   claims: [String!]
   sentence_count: Int!
   claim_count: Int!
@@ -170,8 +170,8 @@ type Paragraph {
 
 type Sentence {
   claim: [String!]
-  Number_of_clauses: Int!
-  Amount_of_words: Int!
+  number_of_clauses: Int!
+  amount_of_words: Int!
   sentence_index: Int!
   amount_dep_clause: Int!
   amount_indep_clause: Int!
@@ -180,7 +180,7 @@ type Sentence {
   mustContainIndependentclause: IndependentClause @relationship(type: "MUST_CONTAIN", direction: OUT)
   mayConainDependentclause: DependentClause @relationship(type: "MAY_CONAIN", direction: OUT)
   mayBeSimple: Simple @relationship(type: "MAY_BE", direction: OUT)
-  mayBeCompound: compound @relationship(type: "MAY_BE", direction: OUT)
+  mayBeCompound: Compound @relationship(type: "MAY_BE", direction: OUT)
   mayBeCompoundcomplex: CompoundComplex @relationship(type: "MAY_BE", direction: OUT)
   isTypeDeclarative: Declarative @relationship(type: "IS_TYPE", direction: OUT)
   mayBeInterrogative: Interrogative @relationship(type: "MAY_BE", direction: OUT)
@@ -199,7 +199,7 @@ type IndependentClause {
   mayBeSimile: Simile @relationship(type: "MAY_BE", direction: OUT)
   mayBeFallacies: Fallacies @relationship(type: "MAY_BE", direction: OUT)
   simpleMustHave: Simple @relationship(type: "MUST_HAVE", direction: IN)
-  compoundMustHave: compound @relationship(type: "MUST_HAVE", direction: IN)
+  compoundMustHave: Compound @relationship(type: "MUST_HAVE", direction: IN)
   compoundcomplexMustHave: CompoundComplex @relationship(type: "MUST_HAVE", direction: IN)
 }
 
@@ -215,7 +215,7 @@ type Word {
 }
 
 type Character {
-  Character_index: Int!
+  character_index: Int!
   paragraphMustContain: Paragraph @relationship(type: "MUST_CONTAIN", direction: IN)
   wordMustContain: Word @relationship(type: "MUST_CONTAIN", direction: IN)
   mayBePunctuation: Punctuation @relationship(type: "MAY_BE", direction: OUT)
@@ -285,41 +285,41 @@ type Argument {
   mustContainConsequence: Consequence @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
-type ethos {
-  Score: [Float]
-  Explanation: [String!]
+type Ethos {
+  score: [Float!]
+  explanation: [String!]
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type pathos {
-  Score: [flaot]
-  Explanation: [String!]
+type Pathos {
+  score: [Float!]
+  explanation: [String!]
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type logos {
-  Score: [Float]
-  Explanation: [String!]
+type Logos {
+  score: [Float!]
+  explanation: [String!]
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
-  mustHavePremise: premise @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveConclusion: conclusion @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHavePremise: Premise @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveConclusion: Conclusion @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
 type Style {
-  Style_Score_Tensor: [int]
-  Register: int
-  Sound_Stylistic: int
-  Euphony_hueristic: int
+  style_score_tensor: [Int!]
+  register: Int!
+  sound_stylistic: Int!
+  euphony_hueristic: Int!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
   containsStylescoretensor: StyleScoreTensor @relationship(type: "CONTAINS", direction: OUT)
 }
 
 type SoundStylistic {
-  Rhyme_score: Float
-  Alliteration_score: Float
-  Assonance_score: Float
-  Consonance_score: Float
-  Rhythm_score: Float
+  rhyme_score: Float!
+  alliteration_score: Float!
+  assonance_score: Float!
+  consonance_score: Float!
+  rhythm_score: Float!
   onomatopoeia: [String!]
   rhyme_explanation: [String!]
   alliteration_explanation: [String!]
@@ -331,37 +331,37 @@ type SoundStylistic {
 
 type Euphony {
   three_syllable_words: [String!]
-  three_syllable_count: int
+  three_syllable_count: Int!
   short_vowels_word: [String!]
   stress_pattern_words: [String!]
-  short_vowels_count: int
-  stress_pattern_count: int
-  count: int
+  short_vowels_count: Int!
+  stress_pattern_count: Int!
+  count: Int!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type Cohesion {
-  Relevancy_Score: Float
-  Continuity_Score: Float
-  topic_transition_Score: Float
+  Relevancy_Score: Float!
+  Continuity_Score: Float!
+  topic_transition_Score: Float!
   Relevancy_explanation: [String!]
   continuity_explanation: [String!]
   topic_transition_explanation: [String!]
-  score: Float
+  score: Float!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type Humor {
-  score: Float
+  score: Float!
   explanation: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type Clarity {
-  clarity_core: Float
+  clarity_core: Float!
   grammar_explanation: String!
-  readability_score: Float
-  grammar_score: Float
+  readability_score: Float!
+  grammar_score: Float!
   readability_explanation: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
@@ -383,7 +383,7 @@ type ExternalActors {
 }
 
 type Fallacies {
-  fallacy_type: String!!
+  fallacy_type: String!
   independentclauseMayBe: IndependentClause @relationship(type: "MAY_BE", direction: IN)
 }
 
@@ -404,12 +404,12 @@ type Consequence {
 }
 
 type PremiseParameters {
-  accuracy: Float
+  accuracy: Float!
   premiseMustContain: Premise @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type ConsequenceParameters {
-  Plausibility: Float
+  Plausibility: Float!
   consequenceMustContain: Consequence @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
@@ -435,9 +435,9 @@ type Purpose {
 }
 
 type Psychographics {
-  Personality: [String!]
-  Interest: [String!]
-  Beliefs: [String!]
+  personality: [String!]
+  interest: [String!]
+  beliefs: [String!]
   externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
   listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
   documentownerMustHave: DocumentOwner @relationship(type: "MUST_HAVE", direction: IN)
@@ -475,35 +475,35 @@ type Bias {
 }
 
 type Decision {
-  decision: string
+  decision: String!
   textPropositions: Text @relationship(type: "PROPOSITIONS", direction: IN)
 }
 
-type premise {
-  premise_strength: Float
-  logosMustHave: logos @relationship(type: "MUST_HAVE", direction: IN)
-  mustHaveValidity: validity @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveSoundness: soundness @relationship(type: "MUST_HAVE", direction: OUT)
+type Premise {
+  premise_strength: Float!
+  logosMustHave: Logos @relationship(type: "MUST_HAVE", direction: IN)
+  mustHaveValidity: Validity @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveSoundness: Soundness @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
-type conclusion {
-  word_count: int
+type Conclusion {
+  word_count: Int!
   conclusion: [String!]
-  logosMustHave: logos @relationship(type: "MUST_HAVE", direction: IN)
-  mustHaveValidity: validity @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveSoundness: soundness @relationship(type: "MUST_HAVE", direction: OUT)
+  logosMustHave: Logos @relationship(type: "MUST_HAVE", direction: IN)
+  mustHaveValidity: Validity @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveSoundness: Soundness @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
-type validity {
-  validit_strength: Float
-  premiseMustHave: premise @relationship(type: "MUST_HAVE", direction: IN)
-  conclusionMustHave: conclusion @relationship(type: "MUST_HAVE", direction: IN)
+type Validity {
+  Validit_strength: Float!
+  premiseMustHave: Premise @relationship(type: "MUST_HAVE", direction: IN)
+  conclusionMustHave: Conclusion @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type soundness {
-  Soundness_strength: Float
-  premiseMustHave: premise @relationship(type: "MUST_HAVE", direction: IN)
-  conclusionMustHave: conclusion @relationship(type: "MUST_HAVE", direction: IN)
+type Soundness {
+  soundness_strength: Float!
+  premiseMustHave: Premise @relationship(type: "MUST_HAVE", direction: IN)
+  conclusionMustHave: Conclusion @relationship(type: "MUST_HAVE", direction: IN)
 }
 
 type Simple {
@@ -515,11 +515,11 @@ type Simple {
   mustHaveIndependentclause: IndependentClause @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
-type compound {
+type Compound {
   clauses: [String!]
-  amoun_of_indep_clauses: int
+  amoun_of_indep_clauses: Int!
   conjunction_word: [String!]
-  word_count: int
+  word_count: Int!
   sentenceMayBe: Sentence @relationship(type: "MAY_BE", direction: IN)
   mustHaveIndependentclause: IndependentClause @relationship(type: "MUST_HAVE", direction: OUT)
 }
@@ -571,7 +571,7 @@ type Color {
 }
 
 type Weight {
-  weight: Float
+  weight: Float!
   characterMustHave: Character @relationship(type: "MUST_HAVE", direction: IN)
 }
 
@@ -588,7 +588,7 @@ type CharacterStyle {
 }
 
 type Alphabet {
-  ASCII: String!
+  ASCII: String
   characterMayBe: Character @relationship(type: "MAY_BE", direction: IN)
 }
 
