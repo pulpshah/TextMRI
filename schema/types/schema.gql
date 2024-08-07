@@ -1,482 +1,482 @@
-type text {
+type Text {
   name: String!
-  id: ID!
-  isDocument: document @relationship(type: "IS", direction: OUT)
-  propositionsDecision: decision @relationship(type: "PROPOSITIONS", direction: OUT)
-  mustHaveKnowledge: knowledge @relationship(type: "MUST_HAVE", direction: OUT)
-  referencesReference: reference @relationship(type: "REFERENCES", direction: OUT)
-  mustContainEnvironment: environment @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainPurpose: purpose @relationship(type: "MUST_CONTAIN", direction: OUT)
-  textTranscriptMustContain: text_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
-  imageMayContain: image @relationship(type: "MAY_CONTAIN", direction: IN)
-  audioTranscriptMayContain: audio_transcript @relationship(type: "MAY_CONTAIN", direction: IN)
-  imageTranscriptMayContain: image_transcript @relationship(type: "MAY_CONTAIN", direction: IN)
-  listenerAudienceOf: listener @relationship(type: "AUDIENCE_OF", direction: IN)
-  documentOwnerOwns: document_owner @relationship(type: "OWNS", direction: IN)
+  id: Int!
+  isDocument: Document @relationship(type: "IS", direction: OUT)
+  propositionsDecision: Decision @relationship(type: "PROPOSITIONS", direction: OUT)
+  mustHaveKnowledge: Knowledge @relationship(type: "MUST_HAVE", direction: OUT)
+  referencesReference: Reference @relationship(type: "REFERENCES", direction: OUT)
+  mustContainEnvironment: Environment @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainPurpose: Purpose @relationship(type: "MUST_CONTAIN", direction: OUT)
+  texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
+  imageMayContain: Image @relationship(type: "MAY_CONTAIN", direction: IN)
+  audiotranscriptMayContain: AudioTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
+  imagetranscriptMayContain: ImageTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
+  listenerAudienceOf: Listener @relationship(type: "AUDIENCE_OF", direction: IN)
+  documentownerOwns: DocumentOwner @relationship(type: "OWNS", direction: IN)
 }
 
-type text_transcript {
+type TextTranscript {
+  transcript_text: String!
   transcript_name: String!
-  transcript: String!
-  mustContainText: text @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainActor: actor @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainTurn: turn @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainTopic: topic @relationship(type: "MUST_CONTAIN", direction: OUT)
-  videoTranscriptMayContain: video_transcript @relationship(type: "MAY_CONTAIN", direction: IN)
+  mustContainText: Text @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainActor: Actor @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainTurn: Turn @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainTopic: Topic @relationship(type: "MUST_CONTAIN", direction: OUT)
+  videotranscriptMayContain: VideoTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
-type actor {
+type Actor {
   name: String!
-  id: ID!
-  textTranscriptMustContain: text_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
-  turnDifferentiatedBy: turn @relationship(type: "DIFFERENTIATED_BY", direction: IN)
-  audioTranscriptMayContain: audio_transcript @relationship(type: "MAY_CONTAIN", direction: IN)
-  imageTranscriptMayContain: image_transcript @relationship(type: "MAY_CONTAIN", direction: IN)
+  id: Int!
+  texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
+  turnDifferentiatedBy: Turn @relationship(type: "DIFFERENTIATED_BY", direction: IN)
+  audiotranscriptMayContain: AudioTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
+  imagetranscriptMayContain: ImageTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
-type turn {
+type Turn {
   turn_number: Int!
-  textTranscriptMustContain: text_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
-  differentiatedByActor: actor @relationship(type: "DIFFERENTIATED_BY", direction: OUT)
-  differentiatedByTopic: topic @relationship(type: "DIFFERENTIATED_BY", direction: OUT)
+  texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
+  differentiatedByActor: Actor @relationship(type: "DIFFERENTIATED_BY", direction: OUT)
+  differentiatedByTopic: Topic @relationship(type: "DIFFERENTIATED_BY", direction: OUT)
 }
 
-type audio {
-  file_name: String!
-  file_size: Int!
-  ifTranscribedAudioTranscript: audio_transcript @relationship(type: "IF_TRANSCRIBED", direction: OUT)
-  videoSegmentedBySound: video @relationship(type: "SEGMENTED_BY_SOUND", direction: IN)
+type Audio {
+  file: String!
+  size: Int!
+  ifTranscribedAudiotranscript: AudioTranscript @relationship(type: "IF_TRANSCRIBED", direction: OUT)
+  videoSegmentedBySound: Video @relationship(type: "SEGMENTED_BY_SOUND", direction: IN)
 }
 
-type video {
+type Video {
   title: String!
   length: Int!
   link: String!
   frame_rate: Int!
-  segmentedBySoundAudio: audio @relationship(type: "SEGMENTED_BY_SOUND", direction: OUT)
-  segmentedByImageFrame: frame @relationship(type: "SEGMENTED_BY_IMAGE", direction: OUT)
-  containsTranscriptVideoTranscript: video_transcript @relationship(type: "CONTAINS_TRANSCRIPT", direction: OUT)
+  segmentedBySoundAudio: Audio @relationship(type: "SEGMENTED_BY_SOUND", direction: OUT)
+  segmentedByImageFrame: Frame @relationship(type: "SEGMENTED_BY_IMAGE", direction: OUT)
+  containsTranscriptVideotranscript: VideoTranscript @relationship(type: "CONTAINS_TRANSCRIPT", direction: OUT)
 }
 
-type frame {
-  frame_number: Int!
-  videoSegmentedByImage: video @relationship(type: "SEGMENTED_BY_IMAGE", direction: IN)
-  mustContainImage: image @relationship(type: "MUST_CONTAIN", direction: OUT)
+type Frame {
+  Frame_number: Int!
+  videoSegmentedByImage: Video @relationship(type: "SEGMENTED_BY_IMAGE", direction: IN)
+  mustContainImage: Image @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
-type reference {
+type Reference {
   title: String!
   author: String!
   source: String!
   type: String!
-  textReferences: text @relationship(type: "REFERENCES", direction: IN)
+  textReferences: Text @relationship(type: "REFERENCES", direction: IN)
 }
 
-type topic {
+type Topic {
   topic_name: String!
-  textTranscriptMustContain: text_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
-  turnDifferentiatedBy: turn @relationship(type: "DIFFERENTIATED_BY", direction: IN)
+  texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
+  turnDifferentiatedBy: Turn @relationship(type: "DIFFERENTIATED_BY", direction: IN)
 }
-type image {
+
+type Image {
   coordinates: Int!
   pixels_x: Int!
   pixels: Int!
   pixels_y: Int!
-  frameMustContain: frame @relationship(type: "MUST_CONTAIN", direction: IN)
-  mayContainText: text @relationship(type: "MAY_CONTAIN", direction: OUT)
-  ifTranscribedImageTranscript: image_transcript @relationship(type: "IF_TRANSCRIBED", direction: OUT)
+  frameMustContain: Frame @relationship(type: "MUST_CONTAIN", direction: IN)
+  mayContainText: Text @relationship(type: "MAY_CONTAIN", direction: OUT)
+  ifTranscribedImagetranscript: ImageTranscript @relationship(type: "IF_TRANSCRIBED", direction: OUT)
 }
 
-type audio_transcript {
+type AudioTranscript {
   transcript: String!
   word_count: Int!
   sentence_count: Int!
   character_count: Int!
-  audioIfTranscribed: audio @relationship(type: "IF_TRANSCRIBED", direction: IN)
-  mayContainText: text @relationship(type: "MAY_CONTAIN", direction: OUT)
-  mustContainTimeStamp: time_stamp @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainVolume: volume @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mayContainActor: actor @relationship(type: "MAY_CONTAIN", direction: OUT)
-  videoTranscriptMustContain: video_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
+  audioIfTranscribed: Audio @relationship(type: "IF_TRANSCRIBED", direction: IN)
+  mayContainText: Text @relationship(type: "MAY_CONTAIN", direction: OUT)
+  mustContainTimestamp: Timestamp @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainVolume: Volume @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mayContainActor: Actor @relationship(type: "MAY_CONTAIN", direction: OUT)
+  videotranscriptMustContain: VideoTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type time_stamp {
+type Timestamp {
   time: String!
-  audioTranscriptMustContain: audio_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
+  audiotranscriptMustContain: AudioTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type volume {
-  volume: Int
-  audioTranscriptMustContain: audio_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
+type Volume {
+  volume: Int!
+  audiotranscriptMustContain: AudioTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type image_transcript {
+type ImageTranscript {
   transcript: String!
-  imageIfTranscribed: image @relationship(type: "IF_TRANSCRIBED", direction: IN)
-  mustContainColor: color @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mayContainEntity: entity @relationship(type: "MAY_CONTAIN", direction: OUT)
-  mayContainActor: actor @relationship(type: "MAY_CONTAIN", direction: OUT)
-  mayContainText: text @relationship(type: "MAY_CONTAIN", direction: OUT)
-  videoTranscriptMustContain: video_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
+  imageIfTranscribed: Image @relationship(type: "IF_TRANSCRIBED", direction: IN)
+  mustContainColor: Color @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mayContainEntity: Entity @relationship(type: "MAY_CONTAIN", direction: OUT)
+  mayContainActor: Actor @relationship(type: "MAY_CONTAIN", direction: OUT)
+  mayContainText: Text @relationship(type: "MAY_CONTAIN", direction: OUT)
+  videotranscriptMustContain: VideoTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type color {
-  Color_code: String!
-  imageTranscriptMustContain: image_transcript @relationship(type: "MUST_CONTAIN", direction: IN)
+type Color {
+  color_code: String!
+  imagetranscriptMustContain: ImageTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type entity {
-  Id: ID!
-  imageTranscriptMayContain: image_transcript @relationship(type: "MAY_CONTAIN", direction: IN)
+type Entity {
+  Id: Int!
+  imagetranscriptMayContain: ImageTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
-type video_transcript {
+type VideoTranscript {
   transcript: String!
-  videoContainsTranscript: video @relationship(type: "CONTAINS_TRANSCRIPT", direction: IN)
-  mustContainImageTranscript: image_transcript @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainAudioTranscript: audio_transcript @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mayContainTextTranscript: text_transcript @relationship(type: "MAY_CONTAIN", direction: OUT)
+  videoContainsTranscript: Video @relationship(type: "CONTAINS_TRANSCRIPT", direction: IN)
+  mustContainImagetranscript: ImageTranscript @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainAudiotranscript: AudioTranscript @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mayContainTexttranscript: TextTranscript @relationship(type: "MAY_CONTAIN", direction: OUT)
 }
 
-type document {
+type Document {
   turn: Int!
   speaker: String!
   content: [String!]
   role: String!
-  textIs: text @relationship(type: "IS", direction: IN)
+  textIs: Text @relationship(type: "IS", direction: IN)
   mustContainEthos: ethos @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainPathos: pathos @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainLogos: logos @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainStyle: style @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainSoundStylistic: sound_stylistic @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainEuphony: euphony @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainCohesion: cohesion @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainHumor: humor @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainClarity: clarity @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainSection: section @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainTopic: topic @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainStyle: Style @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainSoundstylistic: SoundStylistic @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainEuphony: Euphony @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainCohesion: Cohesion @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainHumor: Humor @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainClarity: Clarity @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainSection: Section @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainTopic: Topic @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
-type paragraph {
-  paragraph_number: Int!
+type Paragraph {
+  Paragraph_number: Int!
   claims: [String!]
   sentence_count: Int!
   claim_count: Int!
-  mayContainSentence: sentence @relationship(type: "MAY_CONTAIN", direction: OUT)
-  mustContainCharacter: character @relationship(type: "MUST_CONTAIN", direction: OUT)
-  sectionMustContain: section @relationship(type: "MUST_CONTAIN", direction: IN)
+  mayContainSentence: Sentence @relationship(type: "MAY_CONTAIN", direction: OUT)
+  mustContainCharacter: Character @relationship(type: "MUST_CONTAIN", direction: OUT)
+  sectionMustContain: Section @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type sentence {
+type Sentence {
   claim: [String!]
-  number_of_clauses: Int!
-  amount_of_words: Int!
+  Number_of_clauses: Int!
+  Amount_of_words: Int!
   sentence_index: Int!
   amount_dep_clause: Int!
   amount_indep_clause: Int!
   sentence_structure: [String!]
-  paragraphMayContain: paragraph @relationship(type: "MAY_CONTAIN", direction: IN)
-  mustContainIndClause: ind_clause @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mayConainDepClause: dep_clause @relationship(type: "MAY_CONAIN", direction: OUT)
-  mayBeSimple: simple @relationship(type: "MAY_BE", direction: OUT)
+  paragraphMayContain: Paragraph @relationship(type: "MAY_CONTAIN", direction: IN)
+  mustContainIndependentclause: IndependentClause @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mayConainDependentclause: DependentClause @relationship(type: "MAY_CONAIN", direction: OUT)
+  mayBeSimple: Simple @relationship(type: "MAY_BE", direction: OUT)
   mayBeCompound: compound @relationship(type: "MAY_BE", direction: OUT)
-  mayBeCompoundComplex: compound_complex @relationship(type: "MAY_BE", direction: OUT)
-  isTypeSentenceType: sentence_type @relationship(type: "IS_TYPE", direction: OUT)
-  mayBeInterrogative: interrogative @relationship(type: "MAY_BE", direction: OUT)
-  mayBeImperative: imperative @relationship(type: "MAY_BE", direction: OUT)
-  mayBeExclamatory: exclamatory @relationship(type: "MAY_BE", direction: OUT)
+  mayBeCompoundcomplex: CompoundComplex @relationship(type: "MAY_BE", direction: OUT)
+  isTypeDeclarative: Declarative @relationship(type: "IS_TYPE", direction: OUT)
+  mayBeInterrogative: Interrogative @relationship(type: "MAY_BE", direction: OUT)
+  mayBeImperative: Imperative @relationship(type: "MAY_BE", direction: OUT)
+  mayBeExclamatory: Exclamatory @relationship(type: "MAY_BE", direction: OUT)
 }
 
-type ind_clause {
+type IndependentClause {
   clause: [String!]
   word_count: Int!
   clause_index: Int!
-  sentenceMustContain: sentence @relationship(type: "MUST_CONTAIN", direction: IN)
-  mustContainWord: word @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mayBeClaim: claim @relationship(type: "MAY_BE", direction: OUT)
-  mayBeMetaphor: metaphor @relationship(type: "MAY_BE", direction: OUT)
-  mayBeSimile: simile @relationship(type: "MAY_BE", direction: OUT)
-  mayBeFallacies: fallacies @relationship(type: "MAY_BE", direction: OUT)
-  simpleMustHave: simple @relationship(type: "MUST_HAVE", direction: IN)
+  sentenceMustContain: Sentence @relationship(type: "MUST_CONTAIN", direction: IN)
+  mustContainWord: Word @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mayBeClaim: Claim @relationship(type: "MAY_BE", direction: OUT)
+  mayBeMetaphor: Metaphor @relationship(type: "MAY_BE", direction: OUT)
+  mayBeSimile: Simile @relationship(type: "MAY_BE", direction: OUT)
+  mayBeFallacies: Fallacies @relationship(type: "MAY_BE", direction: OUT)
+  simpleMustHave: Simple @relationship(type: "MUST_HAVE", direction: IN)
   compoundMustHave: compound @relationship(type: "MUST_HAVE", direction: IN)
-  compoundComplexMustHave: compound_complex @relationship(type: "MUST_HAVE", direction: IN)
+  compoundcomplexMustHave: CompoundComplex @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type word {
+type Word {
   word_length: Int!
   character_amount: Int!
-  word_index: Int!
-  indClauseMustContain: ind_clause @relationship(type: "MUST_CONTAIN", direction: IN)
-  mustContainCharacter: character @relationship(type: "MUST_CONTAIN", direction: OUT)
-  isPartOfSpeech: part_of_speech @relationship(type: "IS", direction: OUT)
-  mayBeNamedEntity: named_entity @relationship(type: "MAY_BE", direction: OUT)
-  depClauseMustContain: dep_clause @relationship(type: "MUST_CONTAIN", direction: IN)
+  Word_index: Int!
+  independentclauseMustContain: IndependentClause @relationship(type: "MUST_CONTAIN", direction: IN)
+  mustContainCharacter: Character @relationship(type: "MUST_CONTAIN", direction: OUT)
+  isPartofspeech: PartOfSpeech @relationship(type: "IS", direction: OUT)
+  mayBeNamedentity: NamedEntity @relationship(type: "MAY_BE", direction: OUT)
+  dependentclauseMustContain: DependentClause @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type character {
-  character_index: Int!
-  paragraphMustContain: paragraph @relationship(type: "MUST_CONTAIN", direction: IN)
-  wordMustContain: word @relationship(type: "MUST_CONTAIN", direction: IN)
-  mayBePunctuation: punctuation @relationship(type: "MAY_BE", direction: OUT)
-  mustHaveColor: color @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveWeight: weight @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveCharacterType: character_type @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveCharacterStyle: character_style @relationship(type: "MUST_HAVE", direction: OUT)
-  mayBeAlphabet: alphabet @relationship(type: "MAY_BE", direction: OUT)
-  mayBeNumerics: numerics @relationship(type: "MAY_BE", direction: OUT)
-  mayBeSpecialCharacters: special_characters @relationship(type: "MAY_BE", direction: OUT)
+type Character {
+  Character_index: Int!
+  paragraphMustContain: Paragraph @relationship(type: "MUST_CONTAIN", direction: IN)
+  wordMustContain: Word @relationship(type: "MUST_CONTAIN", direction: IN)
+  mayBePunctuation: Punctuation @relationship(type: "MAY_BE", direction: OUT)
+  mustHaveColor: Color @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveWeight: Weight @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveCharactertype: CharacterType @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveCharacterstyle: CharacterStyle @relationship(type: "MUST_HAVE", direction: OUT)
+  mayBeAlphabet: Alphabet @relationship(type: "MAY_BE", direction: OUT)
+  mayBeNumerics: Numerics @relationship(type: "MAY_BE", direction: OUT)
+  mayBeSpecialcharacters: SpecialCharacters @relationship(type: "MAY_BE", direction: OUT)
 }
 
-type punctuation {
-  punctuation_mark: String!
-  characterMayBe: character @relationship(type: "MAY_BE", direction: IN)
-  interrogativeMayHave: interrogative @relationship(type: "MAY_HAVE", direction: IN)
-  exclamatoryMayHave: exclamatory @relationship(type: "MAY_HAVE", direction: IN)
+type Punctuation {
+  mark: String!
+  characterMayBe: Character @relationship(type: "MAY_BE", direction: IN)
+  interrogativeMayHave: Interrogative @relationship(type: "MAY_HAVE", direction: IN)
+  exclamatoryMayHave: Exclamatory @relationship(type: "MAY_HAVE", direction: IN)
 }
 
-type claim {
-  claim: String!
-  indClauseMayBe: ind_clause @relationship(type: "MAY_BE", direction: IN)
+type Claim {
+  Claim: [String!]
+  independentclauseMayBe: IndependentClause @relationship(type: "MAY_BE", direction: IN)
 }
 
-type metaphor {
-  metaphor: String!
-  indClauseMayBe: ind_clause @relationship(type: "MAY_BE", direction: IN)
+type Metaphor {
+  Metaphor: [String!]
+  independentclauseMayBe: IndependentClause @relationship(type: "MAY_BE", direction: IN)
 }
 
-type simile {
-  simile: String!
-  indClauseMayBe: ind_clause @relationship(type: "MAY_BE", direction: IN)
+type Simile {
+  Simile: [String!]
+  independentclauseMayBe: IndependentClause @relationship(type: "MAY_BE", direction: IN)
 }
 
-type dep_clause {
-  clause: String!
+type DependentClause {
+  clause: [String!]
   word_count: Int!
   clause_index: Int!
-  sentenceMayConain: sentence @relationship(type: "MAY_CONAIN", direction: IN)
-  mustContainWord: word @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mayBeArgument: argument @relationship(type: "MAY_BE", direction: OUT)
-  compoundComplexMustHave: compound_complex @relationship(type: "MUST_HAVE", direction: IN)
+  sentenceMayConain: Sentence @relationship(type: "MAY_CONAIN", direction: IN)
+  mustContainWord: Word @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mayBeArgument: Argument @relationship(type: "MAY_BE", direction: OUT)
+  compoundcomplexMustHave: CompoundComplex @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type part_of_speech {
+type PartOfSpeech {
   word_count: Int!
-  wordIs: word @relationship(type: "IS", direction: IN)
-  imperativeMustHave: imperative @relationship(type: "MUST_HAVE", direction: IN)
+  wordIs: Word @relationship(type: "IS", direction: IN)
+  imperativeMustHave: Imperative @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type named_entity {
-  id: ID!
+type NamedEntity {
+  id: Int!
   name: String!
-  wordMayBe: word @relationship(type: "MAY_BE", direction: IN)
-  externalActorsMayContain: external_actors @relationship(type: "MAY_CONTAIN", direction: IN)
+  wordMayBe: Word @relationship(type: "MAY_BE", direction: IN)
+  externalactorsMayContain: ExternalActors @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
-type argument {
-  Argument: String!
+type Argument {
+  Argument: [String!]
   word_count: Int!
   premises: [String!]
   conclustion: [String!]
   consequences: [String!]
   premise_count: Int!
-  depClauseMayBe: dep_clause @relationship(type: "MAY_BE", direction: IN)
-  mustContainPremise: premise @relationship(type: "MUST_CONTAIN", direction: OUT)
-  mustContainConsequence: consequence @relationship(type: "MUST_CONTAIN", direction: OUT)
+  dependentclauseMayBe: DependentClause @relationship(type: "MAY_BE", direction: IN)
+  mustContainPremise: Premise @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainConsequence: Consequence @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
 type ethos {
-  score: Float!
-  explanation: String
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  Score: [Float]
+  Explanation: [String!]
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type pathos {
-  Score: Float!
-  Explanation: String
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  Score: [flaot]
+  Explanation: [String!]
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type logos {
-  Score: Float!
-  Explanation: String
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  Score: [Float]
+  Explanation: [String!]
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
   mustHavePremise: premise @relationship(type: "MUST_HAVE", direction: OUT)
   mustHaveConclusion: conclusion @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
-type style {
-  style_score_tensor: [Int]
-  register: Int
-  sound_stylistic: Int
-  euphony_hueristic: Int
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
-  containsStyleScoreTensor: style_score_tensor @relationship(type: "CONTAINS", direction: OUT)
+type Style {
+  Style_Score_Tensor: [int]
+  Register: int
+  Sound_Stylistic: int
+  Euphony_hueristic: int
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
+  containsStylescoretensor: StyleScoreTensor @relationship(type: "CONTAINS", direction: OUT)
 }
 
-type sound_stylistic {
-  rhyme_score: Float
-  alliteration_score: Float
-  assonance_score: Float
-  consonance_score: Float
-  rhythm_score: Float
+type SoundStylistic {
+  Rhyme_score: Float
+  Alliteration_score: Float
+  Assonance_score: Float
+  Consonance_score: Float
+  Rhythm_score: Float
   onomatopoeia: [String!]
   rhyme_explanation: [String!]
   alliteration_explanation: [String!]
   assonance_explanation: [String!]
   consonance_explanation: [String!]
   rythm_explanation: [String!]
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type euphony {
+type Euphony {
   three_syllable_words: [String!]
-  three_syllable_count: Int!
+  three_syllable_count: int
   short_vowels_word: [String!]
-  stress_pattern_word: [String!]
-  consonant_phenomes: [String!]
-  short_vowel_count: Int
-  stress_pattern_count: Int
-  total_count: Int
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  stress_pattern_words: [String!]
+  short_vowels_count: int
+  stress_pattern_count: int
+  count: int
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type cohesion {
-  relevancy_Score: Float
-  continuity_Score: Float
+type Cohesion {
+  Relevancy_Score: Float
+  Continuity_Score: Float
   topic_transition_Score: Float
-  relevancy_explanation: String
-  continuity_explanation: String
-  topic_transition_explanation: String
+  Relevancy_explanation: [String!]
+  continuity_explanation: [String!]
+  topic_transition_explanation: [String!]
   score: Float
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type humor {
-  probability_score: Float!
+type Humor {
+  score: Float
   explanation: String!
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type clarity {
-  clarity_score: Float!
-  grammar_explanation: String
+type Clarity {
+  clarity_core: Float
+  grammar_explanation: String!
   readability_score: Float
   grammar_score: Float
-  readability_explanation: String
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  readability_explanation: String!
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type agents {
+type Agents {
   name: String!
-  mayBeListener: listener @relationship(type: "MAY_BE", direction: OUT)
-  mayBeDocumentOwner: document_owner @relationship(type: "MAY_BE", direction: OUT)
+  mayBeListener: Listener @relationship(type: "MAY_BE", direction: OUT)
+  mayBeDocumentowner: DocumentOwner @relationship(type: "MAY_BE", direction: OUT)
 }
 
-type external_actors {
+type ExternalActors {
   name: String!
-  id: ID!
-  mayContainNamedEntity: named_entity @relationship(type: "MAY_CONTAIN", direction: OUT)
-  mustHavePsychographics: psychographics @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveDemographics: demographics @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveMindstate: mindstate @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveBias: bias @relationship(type: "MUST_HAVE", direction: OUT)
+  id: Int!
+  mayContainNamedentity: NamedEntity @relationship(type: "MAY_CONTAIN", direction: OUT)
+  mustHavePsychographics: Psychographics @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveDemographics: Demographics @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveMindstate: Mindstate @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveBias: Bias @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
-type fallacies {
-  fallacy_type: String!
-  indClauseMayBe: ind_clause @relationship(type: "MAY_BE", direction: IN)
+type Fallacies {
+  fallacy_type: String!!
+  independentclauseMayBe: IndependentClause @relationship(type: "MAY_BE", direction: IN)
 }
 
-type premise {
+type Premise {
   parameters: [String!]
-  index: Int
-  word_count: Int
-  argumentMustContain: argument @relationship(type: "MUST_CONTAIN", direction: IN)
-  mustContainPremiseParameters: premise_parameters @relationship(type: "MUST_CONTAIN", direction: OUT)
+  index: Int!
+  word_count: Int!
+  argumentMustContain: Argument @relationship(type: "MUST_CONTAIN", direction: IN)
+  mustContainPremiseparameters: PremiseParameters @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
-type consequence {
+type Consequence {
   parameters: [String!]
-  index: Int
-  word_count: Int
-  argumentMustContain: argument @relationship(type: "MUST_CONTAIN", direction: IN)
-  mustContainConsequenceParameters: consequence_parameters @relationship(type: "MUST_CONTAIN", direction: OUT)
+  index: Int!
+  word_count: Int!
+  argumentMustContain: Argument @relationship(type: "MUST_CONTAIN", direction: IN)
+  mustContainConsequenceparameters: ConsequenceParameters @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
-type premise_parameters {
+type PremiseParameters {
   accuracy: Float
-  premiseMustContain: premise @relationship(type: "MUST_CONTAIN", direction: IN)
+  premiseMustContain: Premise @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type consequence_parameters {
-  plausibility: Float
-  consequenceMustContain: consequence @relationship(type: "MUST_CONTAIN", direction: IN)
+type ConsequenceParameters {
+  Plausibility: Float
+  consequenceMustContain: Consequence @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type section {
-  section_name: String!
-  section_number: Int
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
-  mustContainParagraph: paragraph @relationship(type: "MUST_CONTAIN", direction: OUT)
+type Section {
+  Section_name: String!
+  section_number: Int!
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
+  mustContainParagraph: Paragraph @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
-type environment {
-  context: String
-  audience: String
-  purpose: String
-  language: String
-  textMustContain: text @relationship(type: "MUST_CONTAIN", direction: IN)
+type Environment {
+  context: String!
+  audience: String!
+  purpose: String!
+  language: String!
+  textMustContain: Text @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type purpose {
+type Purpose {
   purpose: String!
   audience: String!
-  textMustContain: text @relationship(type: "MUST_CONTAIN", direction: IN)
+  textMustContain: Text @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type psychographics {
-  personality: [String!]
-  interest: [String!]
-  beliefs: [String!]
-  externalActorsMustHave: external_actors @relationship(type: "MUST_HAVE", direction: IN)
-  listenerMustHave: listener @relationship(type: "MUST_HAVE", direction: IN)
-  documentOwnerMustHave: document_owner @relationship(type: "MUST_HAVE", direction: IN)
+type Psychographics {
+  Personality: [String!]
+  Interest: [String!]
+  Beliefs: [String!]
+  externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
+  listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
+  documentownerMustHave: DocumentOwner @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type demographics {
-  age: Int
-  gender: String
-  race: String
-  ethnicity: String
-  income: Int
-  location: String
-  externalActorsMustHave: external_actors @relationship(type: "MUST_HAVE", direction: IN)
-  listenerMustHave: listener @relationship(type: "MUST_HAVE", direction: IN)
-  documentOwnerMustHave: document_owner @relationship(type: "MUST_HAVE", direction: IN)
+type Demographics {
+  age: Int!
+  gender: String!
+  race: String!
+  ethnicity: String!
+  income: Int!
+  location: String!
+  externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
+  listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
+  documentownerMustHave: DocumentOwner @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type mindstate {
+type Mindstate {
   emotional_state: String!
   cognitive_state: String!
   confidence: String!
-  externalActorsMustHave: external_actors @relationship(type: "MUST_HAVE", direction: IN)
-  listenerMustHave: listener @relationship(type: "MUST_HAVE", direction: IN)
-  documentOwnerMustHave: document_owner @relationship(type: "MUST_HAVE", direction: IN)
+  externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
+  listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
+  documentownerMustHave: DocumentOwner @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type bias {
+type Bias {
   bias_type: String!
   category: String!
   cognitive_influence: [String!]
   emotional_influence: [String!]
-  externalActorsMustHave: external_actors @relationship(type: "MUST_HAVE", direction: IN)
-  listenerMustHave: listener @relationship(type: "MUST_HAVE", direction: IN)
-  documentOwnerMustHave: document_owner @relationship(type: "MUST_HAVE", direction: IN)
+  externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
+  listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
+  documentownerMustHave: DocumentOwner @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type decision {
-  decision: String!
-  textPropositions: text @relationship(type: "PROPOSITIONS", direction: IN)
+type Decision {
+  decision: string
+  textPropositions: Text @relationship(type: "PROPOSITIONS", direction: IN)
 }
 
 type premise {
@@ -487,7 +487,7 @@ type premise {
 }
 
 type conclusion {
-  word_count: Int
+  word_count: int
   conclusion: [String!]
   logosMustHave: logos @relationship(type: "MUST_HAVE", direction: IN)
   mustHaveValidity: validity @relationship(type: "MUST_HAVE", direction: OUT)
@@ -501,171 +501,171 @@ type validity {
 }
 
 type soundness {
-  soundness_strength: Float
+  Soundness_strength: Float
   premiseMustHave: premise @relationship(type: "MUST_HAVE", direction: IN)
   conclusionMustHave: conclusion @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type simple {
-  subject: String
-  predicate: String
-  independent_clause: String
-  word_count: Int
-  sentenceMayBe: sentence @relationship(type: "MAY_BE", direction: IN)
-  mustHaveIndClause: ind_clause @relationship(type: "MUST_HAVE", direction: OUT)
+type Simple {
+  subject: String!
+  predicate: String!
+  independebnt_clause: [String!]
+  word_count: Int!
+  sentenceMayBe: Sentence @relationship(type: "MAY_BE", direction: IN)
+  mustHaveIndependentclause: IndependentClause @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
 type compound {
   clauses: [String!]
-  amoun_of_indep_clauses: Int
+  amoun_of_indep_clauses: int
   conjunction_word: [String!]
-  word_count: Int
-  sentenceMayBe: sentence @relationship(type: "MAY_BE", direction: IN)
-  mustHaveIndClause: ind_clause @relationship(type: "MUST_HAVE", direction: OUT)
+  word_count: int
+  sentenceMayBe: Sentence @relationship(type: "MAY_BE", direction: IN)
+  mustHaveIndependentclause: IndependentClause @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
-type compound_complex {
+type CompoundComplex {
   clauses: [String!]
-  amount_dep_clause: String
-  amount_indep_clause: String
-  word_count: String
+  amount_dep_clause: Int!
+  amount_indep_clause: Int!
+  word_count: Int!
   dep_clauses: [String!]
   indep_clauses: [String!]
-  sentenceMayBe: sentence @relationship(type: "MAY_BE", direction: IN)
-  mustHaveDepClause: dep_clause @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveIndClause: ind_clause @relationship(type: "MUST_HAVE", direction: OUT)
+  sentenceMayBe: Sentence @relationship(type: "MAY_BE", direction: IN)
+  mustHaveDependentclause: DependentClause @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveIndependentclause: IndependentClause @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
-type sentence_type {
-  punctuation: String
-  word_count: Int
-  sentenceIsType: sentence @relationship(type: "IS_TYPE", direction: IN)
+type Declarative {
+  punctuation: String!
+  word_count: Int!
+  sentenceIsType: Sentence @relationship(type: "IS_TYPE", direction: IN)
 }
 
-type interrogative {
-  punctuation: String
-  word_count: Int
+type Interrogative {
+  punctuation: String!
+  word_count: Int!
   subject: [String!]
-  sentenceMayBe: sentence @relationship(type: "MAY_BE", direction: IN)
-  mayHavePunctuation: punctuation @relationship(type: "MAY_HAVE", direction: OUT)
+  sentenceMayBe: Sentence @relationship(type: "MAY_BE", direction: IN)
+  mayHavePunctuation: Punctuation @relationship(type: "MAY_HAVE", direction: OUT)
 }
 
-type imperative {
+type Imperative {
   subject: String!
   conotation: String!
-  word_count: Int
-  sentenceMayBe: sentence @relationship(type: "MAY_BE", direction: IN)
-  mustHavePartOfSpeech: part_of_speech @relationship(type: "MUST_HAVE", direction: OUT)
+  word_count: Int!
+  sentenceMayBe: Sentence @relationship(type: "MAY_BE", direction: IN)
+  mustHavePartofspeech: PartOfSpeech @relationship(type: "MUST_HAVE", direction: OUT)
 }
 
-type exclamatory {
-  word_count: Int
+type Exclamatory {
+  word_count: Int!
   punctuation: String!
-  sentenceMayBe: sentence @relationship(type: "MAY_BE", direction: IN)
-  mayHavePunctuation: punctuation @relationship(type: "MAY_HAVE", direction: OUT)
+  sentenceMayBe: Sentence @relationship(type: "MAY_BE", direction: IN)
+  mayHavePunctuation: Punctuation @relationship(type: "MAY_HAVE", direction: OUT)
 }
 
-type color {
+type Color {
   color_code: String!
-  characterMustHave: character @relationship(type: "MUST_HAVE", direction: IN)
+  characterMustHave: Character @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type weight {
+type Weight {
   weight: Float
-  characterMustHave: character @relationship(type: "MUST_HAVE", direction: IN)
+  characterMustHave: Character @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type character_type {
+type CharacterType {
   font: String!
   handwritten: String!
-  characterMustHave: character @relationship(type: "MUST_HAVE", direction: IN)
+  characterMustHave: Character @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type character_style {
+type CharacterStyle {
   italics: String!
   strikethrough: String!
-  characterMustHave: character @relationship(type: "MUST_HAVE", direction: IN)
+  characterMustHave: Character @relationship(type: "MUST_HAVE", direction: IN)
 }
 
-type alphabet {
-  ASCII: String
-  characterMayBe: character @relationship(type: "MAY_BE", direction: IN)
+type Alphabet {
+  ASCII: String!
+  characterMayBe: Character @relationship(type: "MAY_BE", direction: IN)
 }
 
-type numerics {
-  number: String
-  characterMayBe: character @relationship(type: "MAY_BE", direction: IN)
+type Numerics {
+  number: String!
+  characterMayBe: Character @relationship(type: "MAY_BE", direction: IN)
 }
 
-type special_characters {
-  character: String
-  characterMayBe: character @relationship(type: "MAY_BE", direction: IN)
+type SpecialCharacters {
+  character: String!
+  characterMayBe: Character @relationship(type: "MAY_BE", direction: IN)
 }
 
-type listener {
+type Listener {
   name: String!
-  id: ID!
-  agentsMayBe: agents @relationship(type: "MAY_BE", direction: IN)
-  mustHavePsychographics: psychographics @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveDemographics: demographics @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveMindstate: mindstate @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveBias: bias @relationship(type: "MUST_HAVE", direction: OUT)
-  audienceOfText: text @relationship(type: "AUDIENCE_OF", direction: OUT)
+  id: Int!
+  agentsMayBe: Agents @relationship(type: "MAY_BE", direction: IN)
+  mustHavePsychographics: Psychographics @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveDemographics: Demographics @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveMindstate: Mindstate @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveBias: Bias @relationship(type: "MUST_HAVE", direction: OUT)
+  audienceOfText: Text @relationship(type: "AUDIENCE_OF", direction: OUT)
 }
 
-type document_owner {
+type DocumentOwner {
   name: String!
-  id: ID!
-  agentsMayBe: agents @relationship(type: "MAY_BE", direction: IN)
-  mustHavePsychographics: psychographics @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveDemographics: demographics @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveMindstate: mindstate @relationship(type: "MUST_HAVE", direction: OUT)
-  mustHaveBias: bias @relationship(type: "MUST_HAVE", direction: OUT)
-  ownsText: text @relationship(type: "OWNS", direction: OUT)
+  id: Int!
+  agentsMayBe: Agents @relationship(type: "MAY_BE", direction: IN)
+  mustHavePsychographics: Psychographics @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveDemographics: Demographics @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveMindstate: Mindstate @relationship(type: "MUST_HAVE", direction: OUT)
+  mustHaveBias: Bias @relationship(type: "MUST_HAVE", direction: OUT)
+  ownsText: Text @relationship(type: "OWNS", direction: OUT)
 }
 
-type knowledge {
+type Knowledge {
   type: String!
   explanation: String!
-  textMustHave: text @relationship(type: "MUST_HAVE", direction: IN)
-  mayBeProcedural: procedural @relationship(type: "MAY_BE", direction: OUT)
-  mayBeDeclarative: declarative @relationship(type: "MAY_BE", direction: OUT)
-  mayBeConditional: conditional @relationship(type: "MAY_BE", direction: OUT)
+  textMustHave: Text @relationship(type: "MUST_HAVE", direction: IN)
+  mayBeProcedural: Procedural @relationship(type: "MAY_BE", direction: OUT)
+  mayBeDeclarative: Declarative @relationship(type: "MAY_BE", direction: OUT)
+  mayBeConditional: Conditional @relationship(type: "MAY_BE", direction: OUT)
 }
 
-type procedural {
+type Procedural {
   purpose: String!
-  knowledgeMayBe: knowledge @relationship(type: "MAY_BE", direction: IN)
+  knowledgeMayBe: Knowledge @relationship(type: "MAY_BE", direction: IN)
 }
 
-type declarative {
+type Declarative {
   purpose: String!
   declaration: String!
-  knowledgeMayBe: knowledge @relationship(type: "MAY_BE", direction: IN)
+  knowledgeMayBe: Knowledge @relationship(type: "MAY_BE", direction: IN)
 }
 
-type conditional {
+type Conditional {
   purpose: String!
   premise: String!
-  knowledgeMayBe: knowledge @relationship(type: "MAY_BE", direction: IN)
+  knowledgeMayBe: Knowledge @relationship(type: "MAY_BE", direction: IN)
 }
 
-type topic {
+type Topic {
   topic_name: String!
-  documentMustContain: document @relationship(type: "MUST_CONTAIN", direction: IN)
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
-type style_score_tensor {
-  fig_lang: String
-  simile: String
-  metaphor: String
-  synecdoche: String
-  metonymy: String
-  personification: String
-  apostrophe: String
-  charactonym: String
-  syumbolism: String
-  allegory: String
-  imagery: String
-  styleContains: style @relationship(type: "CONTAINS", direction: IN)
+type StyleScoreTensor {
+  fig_lang: [String!]
+  simile: [String!]
+  metaphor: [String!]
+  synecdoche: [String!]
+  metonymy: [String!]
+  personification: [String!]
+  apostrophe: [String!]
+  charactonym: [String!]
+  syumbolism: [String!]
+  allegory: [String!]
+  imagery: [String!]
+  styleContains: Style @relationship(type: "CONTAINS", direction: IN)
 }
