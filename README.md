@@ -1,5 +1,13 @@
 # TextMRI
 
+## Getting started
+
+1. Clone the repository on to your local computer
+2. run ```cd``` in the terminal to go into the repository 
+3. run ```npm install``` in the terminal to install all the node modules
+4. run ```npm run dev``` to get the server running on your local host
+5. follow the link in the terminal to go to the graphql studio
+
 ## Overview
 The TextMRI API provides tools to analyze debates using technology that will eventually be packaged into the Pulp SDK. 
 
