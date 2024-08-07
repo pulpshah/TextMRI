@@ -5,7 +5,7 @@ import { mergeTypeDefs } from '@graphql-tools/merge';
  
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const typesArray = loadFilesSync(path.join(__dirname, './types'), { extensions: ['graphql'] })
+const typesArray = loadFilesSync(path.join(__dirname, './types'), { extensions: ['gql'] })
  
 const typeDefs = mergeTypeDefs(typesArray);
 export default typeDefs;
