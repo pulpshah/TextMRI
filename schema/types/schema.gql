@@ -73,7 +73,7 @@ type Reference {
 }
 
 type Topic {
-  topic_name: String!
+  name: String!
   texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   turnDifferentiatedBy: Turn @relationship(type: "DIFFERENTIATED_BY", direction: IN)
 }
@@ -142,7 +142,7 @@ type VideoTranscript {
 type Document {
   turn: Int!
   speaker: String!
-  content: [String!]
+  content: String!
   role: String!
   textIs: Text @relationship(type: "IS", direction: IN)
   mustContainEthos: Ethos @relationship(type: "MUST_CONTAIN", direction: OUT)
@@ -169,7 +169,7 @@ type Paragraph {
 }
 
 type Sentence {
-  claim: [String!]
+  claim: String!
   number_of_clauses: Int!
   amount_of_words: Int!
   sentence_index: Int!
@@ -189,7 +189,7 @@ type Sentence {
 }
 
 type IndependentClause {
-  clause: [String!]
+  clause: String!
   word_count: Int!
   clause_index: Int!
   sentenceMustContain: Sentence @relationship(type: "MUST_CONTAIN", direction: IN)
@@ -236,22 +236,22 @@ type Punctuation {
 }
 
 type Claim {
-  Claim: [String!]
+  Claim: String!
   independentclauseMayBe: IndependentClause @relationship(type: "MAY_BE", direction: IN)
 }
 
 type Metaphor {
-  Metaphor: [String!]
+  Metaphor: String!
   independentclauseMayBe: IndependentClause @relationship(type: "MAY_BE", direction: IN)
 }
 
 type Simile {
-  Simile: [String!]
+  Simile: String!
   independentclauseMayBe: IndependentClause @relationship(type: "MAY_BE", direction: IN)
 }
 
 type DependentClause {
-  clause: [String!]
+  clause: String!
   word_count: Int!
   clause_index: Int!
   sentenceMayConain: Sentence @relationship(type: "MAY_CONAIN", direction: IN)
@@ -287,19 +287,19 @@ type Argument {
 
 type Ethos {
   score: [Float!]
-  explanation: [String!]
+  explanation: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type Pathos {
   score: [Float!]
-  explanation: [String!]
+  explanation: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type Logos {
   score: [Float!]
-  explanation: [String!]
+  explanation: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
   mustHavePremise: Premise @relationship(type: "MUST_HAVE", direction: OUT)
   mustHaveConclusion: Conclusion @relationship(type: "MUST_HAVE", direction: OUT)
@@ -321,18 +321,18 @@ type SoundStylistic {
   consonance_score: Float!
   rhythm_score: Float!
   onomatopoeia: [String!]
-  rhyme_explanation: [String!]
-  alliteration_explanation: [String!]
-  assonance_explanation: [String!]
-  consonance_explanation: [String!]
-  rythm_explanation: [String!]
+  rhyme_explanation: String!
+  alliteration_explanation: String!
+  assonance_explanation: String!
+  consonance_explanation: String!
+  rythm_explanation: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type Euphony {
   three_syllable_words: [String!]
   three_syllable_count: Int!
-  short_vowels_word: [String!]
+  short_vowels_words: [String!]
   stress_pattern_words: [String!]
   short_vowels_count: Int!
   stress_pattern_count: Int!
@@ -344,9 +344,9 @@ type Cohesion {
   Relevancy_Score: Float!
   Continuity_Score: Float!
   topic_transition_Score: Float!
-  Relevancy_explanation: [String!]
-  continuity_explanation: [String!]
-  topic_transition_explanation: [String!]
+  Relevancy_explanation: String!
+  continuity_explanation: String!
+  topic_transition_explanation: String!
   score: Float!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
@@ -358,11 +358,11 @@ type Humor {
 }
 
 type Clarity {
-  clarity_core: Float!
-  grammar_explanation: String!
+  score: Float!
+  grammar_expl: String!
   readability_score: Float!
   grammar_score: Float!
-  readability_explanation: String!
+  readability_expl: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
@@ -435,8 +435,8 @@ type Purpose {
 }
 
 type Psychographics {
-  personality: [String!]
-  interest: [String!]
+  personality: String!
+  interests: [String!]
   beliefs: [String!]
   externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
   listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
@@ -651,7 +651,7 @@ type Conditional {
 }
 
 type Topic {
-  topic_name: String!
+  name: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
