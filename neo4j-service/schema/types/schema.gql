@@ -1,6 +1,6 @@
 type Text {
   name: String!
-  id: Int!
+  id: ID! @id
   hasDocumentDocument: Document @relationship(type: "HAS_DOCUMENT", direction: OUT)
   propositionsDecision: Decision @relationship(type: "PROPOSITIONS", direction: OUT)
   mustHaveKnowledge: Knowledge @relationship(type: "MUST_HAVE", direction: OUT)
@@ -16,30 +16,30 @@ type Text {
 }
 
 type TextTranscript {
-  transcript_text: String!
-  transcript_name: String!
+  name: String!
   hasTextText: Text @relationship(type: "HAS_TEXT", direction: OUT)
-  containsActorActor: Actor @relationship(type: "CONTAINS_ACTOR", direction: OUT)
-  containsTurnTurn: Turn @relationship(type: "CONTAINS_TURN", direction: OUT)
-  containsTopicTopic: Topic @relationship(type: "CONTAINS_TOPIC", direction: OUT)
+  containsActorActor: [Actor!]! @relationship(type: "CONTAINS_ACTOR", direction: OUT)
+  containsTurnTurn: [Turn!]! @relationship(type: "CONTAINS_TURN", direction: OUT)
+  containsTopicTopic: [Topic!]! @relationship(type: "CONTAINS_TOPIC", direction: OUT)
   videotranscriptMayContain: VideoTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
 type Actor {
   name: String!
-  id: Int!
+  id: ID! @id
   role: String!
   texttranscriptContainsActor: TextTranscript @relationship(type: "CONTAINS_ACTOR", direction: IN)
-  spokeInTurn: Turn @relationship(type: "SPOKE_IN", direction: OUT)
+  spokeInTurn: [Turn!]! @relationship(type: "SPOKE_IN", direction: OUT)
   audiotranscriptMayContain: AudioTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
   imagetranscriptMayContain: ImageTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
 type Turn {
   turn_number: Int!
+  content: String!
   texttranscriptContainsTurn: TextTranscript @relationship(type: "CONTAINS_TURN", direction: IN)
   actorSpokeIn: Actor @relationship(type: "SPOKE_IN", direction: IN)
-  talkedAboutTopic: Topic @relationship(type: "TALKED_ABOUT", direction: OUT)
+  talkedAboutTopic: [Topic!]! @relationship(type: "TALKED_ABOUT", direction: OUT)
 }
 
 type Audio {
@@ -128,7 +128,7 @@ type Color {
 }
 
 type Entity {
-  id: Int!
+  id: ID! @id
   imagetranscriptMayContain: ImageTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
@@ -267,7 +267,7 @@ type PartOfSpeech {
 }
 
 type NamedEntity {
-  id: Int!
+  id: ID! @id
   name: String!
   wordMayBe: Word @relationship(type: "MAY_BE", direction: IN)
   externalactorsMayContain: ExternalActors @relationship(type: "MAY_CONTAIN", direction: IN)
@@ -374,7 +374,7 @@ type Agents {
 
 type ExternalActors {
   name: String!
-  id: Int!
+  id: ID! @id
   mayContainNamedentity: NamedEntity @relationship(type: "MAY_CONTAIN", direction: OUT)
   mustHavePsychographics: Psychographics @relationship(type: "MUST_HAVE", direction: OUT)
   mustHaveDemographics: Demographics @relationship(type: "MUST_HAVE", direction: OUT)
@@ -604,7 +604,7 @@ type SpecialCharacters {
 
 type Listener {
   name: String!
-  id: Int!
+  id: ID! @id
   agentsMayBe: Agents @relationship(type: "MAY_BE", direction: IN)
   mustHavePsychographics: Psychographics @relationship(type: "MUST_HAVE", direction: OUT)
   mustHaveDemographics: Demographics @relationship(type: "MUST_HAVE", direction: OUT)
@@ -615,7 +615,7 @@ type Listener {
 
 type DocumentOwner {
   name: String!
-  id: Int!
+  id: ID! @id
   agentsMayBe: Agents @relationship(type: "MAY_BE", direction: IN)
   mustHavePsychographics: Psychographics @relationship(type: "MUST_HAVE", direction: OUT)
   mustHaveDemographics: Demographics @relationship(type: "MUST_HAVE", direction: OUT)
