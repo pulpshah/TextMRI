@@ -1,13 +1,13 @@
 type Text {
   name: String!
   id: ID! @id
-  hasDocumentDocument: Document @relationship(type: "HAS_DOCUMENT", direction: OUT)
+  isDocument: Document @relationship(type: "IS", direction: OUT)
   propositionsDecision: Decision @relationship(type: "PROPOSITIONS", direction: OUT)
   mustHaveKnowledge: Knowledge @relationship(type: "MUST_HAVE", direction: OUT)
   referencesReference: Reference @relationship(type: "REFERENCES", direction: OUT)
   mustContainEnvironment: Environment @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainPurpose: Purpose @relationship(type: "MUST_CONTAIN", direction: OUT)
-  texttranscriptHasText: TextTranscript @relationship(type: "HAS_TEXT", direction: IN)
+  texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   imageMayContain: Image @relationship(type: "MAY_CONTAIN", direction: IN)
   audiotranscriptMayContain: AudioTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
   imagetranscriptMayContain: ImageTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
@@ -17,10 +17,10 @@ type Text {
 
 type TextTranscript {
   name: String!
-  hasTextText: Text @relationship(type: "HAS_TEXT", direction: OUT)
-  containsActorActor: [Actor!]! @relationship(type: "CONTAINS_ACTOR", direction: OUT)
-  containsTurnTurn: [Turn!]! @relationship(type: "CONTAINS_TURN", direction: OUT)
-  containsTopicTopic: [Topic!]! @relationship(type: "CONTAINS_TOPIC", direction: OUT)
+  mustContainText: Text @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainActor: Actor @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainTurn: Turn @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainTopic: Topic @relationship(type: "MUST_CONTAIN", direction: OUT)
   videotranscriptMayContain: VideoTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
 
@@ -28,8 +28,8 @@ type Actor {
   name: String!
   id: ID! @id
   role: String!
-  texttranscriptContainsActor: TextTranscript @relationship(type: "CONTAINS_ACTOR", direction: IN)
-  spokeInTurn: [Turn!]! @relationship(type: "SPOKE_IN", direction: OUT)
+  texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
+  spokeInTurn: Turn @relationship(type: "SPOKE_IN", direction: OUT)
   audiotranscriptMayContain: AudioTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
   imagetranscriptMayContain: ImageTranscript @relationship(type: "MAY_CONTAIN", direction: IN)
 }
@@ -37,9 +37,9 @@ type Actor {
 type Turn {
   turn_number: Int!
   content: String!
-  texttranscriptContainsTurn: TextTranscript @relationship(type: "CONTAINS_TURN", direction: IN)
+  texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   actorSpokeIn: Actor @relationship(type: "SPOKE_IN", direction: IN)
-  talkedAboutTopic: [Topic!]! @relationship(type: "TALKED_ABOUT", direction: OUT)
+  talkedAboutTopic: Topic @relationship(type: "TALKED_ABOUT", direction: OUT)
 }
 
 type Audio {
@@ -75,7 +75,7 @@ type Reference {
 
 type Topic {
   name: String!
-  texttranscriptContainsTopic: TextTranscript @relationship(type: "CONTAINS_TOPIC", direction: IN)
+  texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   turnTalkedAbout: Turn @relationship(type: "TALKED_ABOUT", direction: IN)
 }
 
@@ -145,7 +145,7 @@ type Document {
   speaker: String!
   content: String!
   role: String!
-  textHasDocument: Text @relationship(type: "HAS_DOCUMENT", direction: IN)
+  textIs: Text @relationship(type: "IS", direction: IN)
   hasEthosEthos: Ethos @relationship(type: "HAS_ETHOS", direction: OUT)
   hasPathosPathos: Pathos @relationship(type: "HAS_PATHOS", direction: OUT)
   hasLogosLogos: Logos @relationship(type: "HAS_LOGOS", direction: OUT)
@@ -208,7 +208,7 @@ type Word {
   character_amount: Int!
   Word_index: Int!
   independentclauseHasWord: IndependentClause @relationship(type: "HAS_WORD", direction: IN)
-  hasCharCharacter: Character @relationship(type: "HAS_CHAR", direction: OUT)
+  mustContainCharacter: Character @relationship(type: "MUST_CONTAIN", direction: OUT)
   isPartofspeech: PartOfSpeech @relationship(type: "IS", direction: OUT)
   mayBeNamedentity: NamedEntity @relationship(type: "MAY_BE", direction: OUT)
   dependentclauseHasWord: DependentClause @relationship(type: "HAS_WORD", direction: IN)
@@ -217,7 +217,7 @@ type Word {
 type Character {
   character_index: Int!
   paragraphMustContain: Paragraph @relationship(type: "MUST_CONTAIN", direction: IN)
-  wordHasChar: Word @relationship(type: "HAS_CHAR", direction: IN)
+  wordMustContain: Word @relationship(type: "MUST_CONTAIN", direction: IN)
   mayBePunctuation: Punctuation @relationship(type: "MAY_BE", direction: OUT)
   mustHaveColor: Color @relationship(type: "MUST_HAVE", direction: OUT)
   mustHaveWeight: Weight @relationship(type: "MUST_HAVE", direction: OUT)
@@ -256,7 +256,7 @@ type DependentClause {
   clause_index: Int!
   sentenceHasClause: Sentence @relationship(type: "HAS_CLAUSE", direction: IN)
   hasWordWord: Word @relationship(type: "HAS_WORD", direction: OUT)
-  isArgumentArgument: Argument @relationship(type: "IS_ARGUMENT", direction: OUT)
+  mustContainArgument: Argument @relationship(type: "MUST_CONTAIN", direction: OUT)
   compoundcomplexMustHave: CompoundComplex @relationship(type: "MUST_HAVE", direction: IN)
 }
 
@@ -280,7 +280,7 @@ type Argument {
   conclustion: [String!]
   consequences: [String!]
   premise_count: Int!
-  dependentclauseIsArgument: DependentClause @relationship(type: "IS_ARGUMENT", direction: IN)
+  dependentclauseMustContain: DependentClause @relationship(type: "MUST_CONTAIN", direction: IN)
   mustContainPremise: Premise @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainConsequence: Consequence @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
