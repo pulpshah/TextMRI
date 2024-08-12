@@ -1,6 +1,6 @@
 FROM nikolaik/python-nodejs:latest AS development
 WORKDIR /usr/src/app
-RUN pip install pandas requests Beutifulsoup4
+RUN pip install pandas requests beautifulsoup4
 COPY ./package.json ./
 RUN npm install
 COPY ./ ./
