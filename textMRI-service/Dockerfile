@@ -4,10 +4,10 @@ RUN pip install pandas
 COPY ./package.json ./
 RUN npm install
 COPY ./ ./
-RUN npm run build
+# RUN npm run build
 ENV PORT=4001
 EXPOSE $PORT
-CMD ["npm", "run", "prod"]
+CMD ["npm", "run", "dev"]
 
 
 #Production mode
