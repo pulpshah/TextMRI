@@ -16,6 +16,7 @@ type Text {
 }
 
 type TextTranscript {
+  id: ID! @id
   name: String!
   mustContainText: Text @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainActor: Actor @relationship(type: "MUST_CONTAIN", direction: OUT)
@@ -35,6 +36,7 @@ type Actor {
 }
 
 type Turn {
+  id: ID! @id
   turn_number: Int!
   content: String!
   texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
@@ -74,6 +76,7 @@ type Reference {
 }
 
 type Topic {
+  id: ID! @id
   name: String!
   texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   turnTalkedAbout: Turn @relationship(type: "TALKED_ABOUT", direction: IN)
