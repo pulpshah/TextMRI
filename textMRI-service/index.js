@@ -120,6 +120,133 @@ async function extractSentenceData(transcript) {
     });
 }
 
+app.get('/texts', async (req, res) => {
+    try {
+        // Define the GraphQL query to get all text nodes
+        const query = gql`
+            {
+                texts {
+                    name
+                    
+                }
+            }
+        `;
+
+        // Replace with your GraphQL endpoint
+        const endpoint = 'http://localhost:4000';
+
+        // Execute the query
+        const data = await request(endpoint, query);
+
+        // Send the data back as the response
+        res.status(200).json(data);
+    } catch (error) {
+        console.error('Error fetching text nodes:', error);
+        res.status(500).json({ error: 'Failed to fetch text nodes' });
+    }
+});
+
+app.get('/text', async (req, res) => {
+    try {
+        const { name } = req.query; // Get the 'name' parameter from the query string
+
+        if (!name) {
+            return res.status(400).json({ error: 'Name query parameter is required' });
+        }
+
+        // Define the GraphQL query to get text nodes by name
+        const query = gql`
+            query GetTextsByName($name: String!) {
+                texts(where: { name: $name }) {
+                    name
+                   
+                }
+            }
+        `;
+
+        // Replace with your GraphQL endpoint
+        const endpoint = 'http://localhost:4000';
+
+        // Execute the query with the name as a variable
+        const data = await request(endpoint, query, { name });
+
+        // Send the data back as the response
+        res.status(200).json(data);
+    } catch (error) {
+        console.error('Error fetching text nodes:', error);
+        res.status(500).json({ error: 'Failed to fetch text nodes' });
+    }
+});
+
+// app.get('/textid', async (req, res) => {
+//     try {
+//         const { id } = req.query; // Get the 'id' parameter from the query string
+
+//         if (!id) {
+//             return res.status(400).json({ error: 'ID query parameter is required' });
+//         }
+
+//         // Define the GraphQL query to get a text node by id
+//         const query = gql`
+//             query GetTextById($id: ID!) {
+//                 text(where: { id: $id }) {
+//                     id
+//                     name
+
+//                 }
+//             }
+//         `;
+
+//         // Replace with your GraphQL endpoint
+//         const endpoint = 'http://localhost:4000';
+
+//         // Execute the query with the id as a variable
+//         const data = await request(endpoint, query, { id });
+
+//         // Send the data back as the response
+//         res.status(200).json(data);
+//     } catch (error) {
+//         console.error('Error fetching text node:', error);
+//         res.status(500).json({ error: 'Failed to fetch text node' });
+//     }
+// });
+
+app.get('/text-documents', async (req, res) => {
+    try {
+        const { name } = req.query; // Get the 'name' parameter from the query string
+
+        if (!name) {
+            return res.status(400).json({ error: 'Name query parameter is required' });
+        }
+
+        // Define the GraphQL query to get documents by text name
+        const query = gql`
+            query GetDocumentsByTextName($name: String!) {
+                texts(where: { name: $name }) {
+                    name
+                    documents {
+                        role
+                        content
+                        speaker
+
+                    }
+                }
+            }
+        `;
+
+        // Replace with your GraphQL endpoint
+        const endpoint = 'http://localhost:4000';
+
+        // Execute the query with the name as a variable
+        const data = await request(endpoint, query, { name });
+
+        // Send the data back as the response
+        res.status(200).json(data);
+    } catch (error) {
+        console.error('Error fetching documents for text node:', error);
+        res.status(500).json({ error: 'Failed to fetch documents for text node' });
+    }
+});
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
