@@ -1,7 +1,7 @@
 type Text {
   name: String!
   id: ID! @id
-  isDocument: Document @relationship(type: "IS", direction: OUT)
+  hasDocument: Document @relationship(type: "HAS", direction: OUT)
   propositionsDecision: Decision @relationship(type: "PROPOSITIONS", direction: OUT)
   mustHaveKnowledge: Knowledge @relationship(type: "MUST_HAVE", direction: OUT)
   referencesReference: Reference @relationship(type: "REFERENCES", direction: OUT)
@@ -17,6 +17,7 @@ type Text {
 
 type TextTranscript {
   name: String!
+  id: ID! @id
   mustContainText: Text @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainActor: Actor @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainTurn: Turn @relationship(type: "MUST_CONTAIN", direction: OUT)
@@ -145,7 +146,7 @@ type Document {
   speaker: String!
   content: String!
   role: String!
-  textIs: Text @relationship(type: "IS", direction: IN)
+  textHas: Text @relationship(type: "HAS", direction: IN)
   hasEthosEthos: Ethos @relationship(type: "HAS_ETHOS", direction: OUT)
   hasPathosPathos: Pathos @relationship(type: "HAS_PATHOS", direction: OUT)
   hasLogosLogos: Logos @relationship(type: "HAS_LOGOS", direction: OUT)
