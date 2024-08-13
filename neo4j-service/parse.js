@@ -1,101 +1,265 @@
 import fs from "fs";
 import { parse } from "csv-parse/sync";
-// import axios from "axios";
+import axios from "axios";
 
 const API_URL = "http://localhost:4000/";
 
-// Function to create a GraphQL mutation
-function createMutation(data) {
-    return `
-    mutation {
-      createDocument(
-        input: {
-          turn: ${data.turn_number}
-          speaker: "${data.speaker}"
-          content: "${data.content.replace(/"/g, '\\"')}"
-          role: "${data.role}"
-        }
-      ) {
-        id
-      }
-      
-      createText(
-        input: {
-          name: "${data.speaker}_${data.turn_number}"
-          id: ${data.turn_number}
-        }
-      ) {
-        id
-      }
-      
-      addDocumentDocument(
-        from: { name: "${data.speaker}_${data.turn_number}" }
-        to: { turn: ${data.turn_number}, speaker: "${data.speaker}" }
-      ) {
-        from { id }
-        to { id }
-      }
-      
-      createTopic(
-        input: {
-          name: "${data.topics.replace(/"/g, '\\"')}"
-        }
-      ) {
-        id
-      }
-      
-      addMustContainTopic(
-        from: { turn: ${data.turn_number}, speaker: "${data.speaker}" }
-        to: { name: "${data.topics.replace(/"/g, '\\"')}" }
-      ) {
-        from { id }
-        to { id }
-      }
-    }
-  `;
+const data = {
+    actors: {},
+    topics: {},
+};
+
+function parseArray(array) {
+    array = array.slice(1, -1);
+    let arr = array.split(", ");
+    return arr.map((item) => item.slice(1, -1));
 }
 
-// Function to send mutation to GraphQL API
-async function sendMutation(mutation) {
+async function createTextTranscriptNode(name) {
+    const mutation = `
+    mutation {
+      createTextTranscripts(
+        input: {
+          name: "${name}"
+        }
+      ) {
+        textTranscripts {
+          id,
+          name
+        }
+      }
+    }
+
+  `;
     try {
         const response = await axios.post(API_URL, {
             query: mutation,
         });
-        console.log("Mutation successful:", response.data);
+        data.transcript =
+            response.data.data.createTextTranscripts.textTranscripts[0].id;
     } catch (error) {
         console.error("Error sending mutation:", error.message);
     }
 }
 
-// // Read CSV and process each row
-// fs.createReadStream('June 27, 2024 Presidential Debate Transcript.csv')
-//   .pipe(csv())
-//   .on('data', (row) => {
-//     const mutation = createMutation(row);
-//     // sendMutation(mutation);
-//   })
-//   .on('end', () => {
-//     console.log('CSV file successfully processed');
-//   });
-const inputPath = "June 27, 2024 Presidential Debate Transcript.csv";
-
-fs.readFile(inputPath, function (err, fileData) {
-    const records = parse(fileData, {
-        columns: true,
-        skip_empty_lines: true,
-    });
-
-    for(let i = 0; i < records.length; i++) {
-        const mutation = createMutation(records[i]);
-        sendMutation(mutation);
+async function createActorNode({ name, role }) {
+    const mutation = `
+    mutation {
+        createActors(
+            input: {
+                name: "${name}",
+                role: "${role}",
+                texttranscriptMustContain: {
+                connect: {
+                    where: {
+                    node: {
+                        id: "${data.transcript.id}
+                    }
+                    }
+                }
+                }
+            }
+            ) {
+            actors {
+                id,
+                name,
+                role
+            }
+        }
     }
-    // console.log(records.length)
-    // console.log(records[0])
-    // fs.writeFile('text.txt', JSON.stringify(records), (err) => {
-    //     if (err) {
-    //       console.error('Error writing to file:', err);
-    //     } else {
-    //       console.log('File written successfully');
+
+`;
+    try {
+        const response = await axios.post(API_URL, {
+            query: mutation,
+        });
+        actor = response.data.data.createActors.actors[0];
+        data[actor.name] = actor.id;
+    } catch (error) {
+        console.error("Error sending mutation:", error.message);
+    }
+}
+
+async function createTopicNode({ name }) {
+    console.log(data.transcript.id)
+    const mutation = `
+mutation {
+  createTopics(
+    input: {
+      name: "${name}",
+      texttranscriptMustContain: {
+        connect: {
+          where: {
+            node: {
+              id: "${data.transcript.id}"
+            }
+          }
+        }
+      }
+    }
+  ) {
+    topics {
+      id,
+      name
+    }
+  }
+}
+
+`;
+    try {
+        const response = await axios.post(API_URL, {
+            query: mutation,
+        });
+        topic = response.data.data.createTopics.topics[0];
+        data[topic.name] = topic.id;
+    } catch (error) {
+        console.error("Error creating topic mutation:", error.message);
+    }
+}
+
+async function createTurnNode(info) {
+    const { speaker, role, turn_number, content, topics } = info;
+    const parsedTopics = parseArray(topics);
+    if (!data.actors[speaker]) {
+        await createActorNode({ name: speaker, role });
+    }
+    for (let topic of parsedTopics) {
+        if (!data.topics[topic]) {
+            await createTopicNode({ name: topic });
+        }
+    }
+    const mutation = `
+mutation {
+    createTurns(
+      input: {
+        turn_number: ${turn_number},
+        content: "${content}",
+        texttranscriptMustContain: {
+          connect: {
+            where: {
+              node: {
+                id: "${data.transcript.id}"
+              }
+            }
+          }
+        }
+        talkedAboutTopic: {
+          connect: {
+            where: {
+              node: {
+                id: "${data.topics[parsedTopics[0]].id}"
+              }
+            }
+          }
+        }
+        actorSpokeIn: {
+          connect: {
+            where: {
+              node: {
+                id: "6b30fb1c-095a-4ef1-b8d1-8ed3b39f50a2"
+              }
+            }
+          }
+        }
+      }
+    ){
+      turns {
+        id,
+        turn_number,
+        content
+      }
+    }
+  }
+  
+  `;
+
+    // let turn_id;
+    // try {
+    //     const response = await axios.post(API_URL, {
+    //         query: mutation,
+    //     });
+    //     turn_id = response.data.data.createTurns.turns[0];
+    // } catch (error) {
+    //     console.error("Error sending mutation:", error.message);
+    // }
+
+    // if (parsedTopics.length > 1) {
+    //     for (let i = 1; i < parsedTopics.length; i++) {
+    //         const updateMutation = `
+    //             mutation {
+    //                 updateTurns(
+    //                     connect: {
+    //                         talkedAboutTopic: {
+    //                             where: { 
+    //                                 node: { 
+    //                                     id: "${data.topics[parsedTopics[i]].id}" 
+    //                                 } 
+    //                             }
+    //                         }
+    //                     },
+    //                     where: { id: ${turn_id}}
+    //                 ) {
+    //                     turns {
+    //                     id
+    //                     turn_number
+    //                     content
+    //                     }
+    //                 }
+    //             }
+    //         `;
+    //         try {
+    //             await axios.post(API_URL, {
+    //                 query: updateMutation,
+    //             });
+    //         } catch (error) {
+    //             console.error("Error sending mutation:", error.message);
+    //         }
     //     }
-    //   });
-});
+    // }
+}
+
+const inputPath =
+    "neo4j-service/June 27, 2024 Presidential Debate Transcript.csv";
+
+async function createPIO() {
+    await createTextTranscriptNode(
+        "June 27, 2024 Presidential Debate Transcript"
+    );
+
+    console.log(data.transcript.id)
+
+    fs.readFile(inputPath, function (err, fileData) {
+        const records = parse(fileData, {
+            columns: true,
+            skip_empty_lines: true,
+        });
+    
+        // for(let i = 0; i < records.length; i++) {
+        //     createTurnNode(records[i]);
+        // }
+        createTurnNode(records[0]);
+    });
+}
+
+createPIO();
+
+// fs.readFile(inputPath, function (err, fileData) {
+//     const records = parse(fileData, {
+//         columns: true,
+//         skip_empty_lines: true,
+//     });
+
+//     for(let i = 0; i < records.length; i++) {
+//         const mutation = createMutation(records[i]);
+//         // sendMutation(mutation);
+//     }
+//     console.log(records[0])
+//     // console.log(records[0])
+//     fs.writeFile('text.json', JSON.stringify(records), (err) => {
+//         if (err) {
+//           console.error('Error writing to file:', err);
+//         } else {
+//           console.log('File written successfully');
+//         }
+//       });
+// });
