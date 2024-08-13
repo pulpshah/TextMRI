@@ -16,7 +16,6 @@ type Text {
 }
 
 type TextTranscript {
-  id: ID! @id
   name: String!
   id: ID! @id
   mustContainText: Text @relationship(type: "MUST_CONTAIN", direction: OUT)
@@ -37,7 +36,6 @@ type Actor {
 }
 
 type Turn {
-  id: ID! @id
   turn_number: Int!
   content: String!
   texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
@@ -77,7 +75,6 @@ type Reference {
 }
 
 type Topic {
-  id: ID! @id
   name: String!
   texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   turnTalkedAbout: Turn @relationship(type: "TALKED_ABOUT", direction: IN)
@@ -145,10 +142,11 @@ type VideoTranscript {
 }
 
 type Document {
-  turn: Int!
+  turn_number: Int!
   speaker: String!
   content: String!
   role: String!
+  rhteroical_weight: [Int!]
   textHas: Text @relationship(type: "HAS", direction: IN)
   hasEthosEthos: Ethos @relationship(type: "HAS_ETHOS", direction: OUT)
   hasPathosPathos: Pathos @relationship(type: "HAS_PATHOS", direction: OUT)
@@ -161,12 +159,13 @@ type Document {
   mustContainClarity: Clarity @relationship(type: "MUST_CONTAIN", direction: OUT)
   containsSectionSection: Section @relationship(type: "CONTAINS_SECTION", direction: OUT)
   mustContainTopic: Topic @relationship(type: "MUST_CONTAIN", direction: OUT)
+  containsRhetoricalweight: Rhetorical weight  @relationship(type: "CONTAINS", direction: OUT)
 }
 
 type Paragraph {
   paragraph_number: Int!
   claims: [String!]
-  sentence_count: Int!
+  sentence_sum: Int!
   claim_count: Int!
   hasSentenceSentence: Sentence @relationship(type: "HAS_SENTENCE", direction: OUT)
   mustContainCharacter: Character @relationship(type: "MUST_CONTAIN", direction: OUT)
@@ -176,7 +175,7 @@ type Paragraph {
 type Sentence {
   setence: String!
   number_of_clauses: Int
-  amount_of_words: Int
+  word_sum: Int
   sentence_index: Int!
   amount_dep_clause: Int
   amount_indep_clause: Int
@@ -209,7 +208,7 @@ type IndependentClause {
 
 type Word {
   word_length: Int!
-  character_amount: Int!
+  character_sum: Int!
   Word_index: Int!
   independentclauseHasWord: IndependentClause @relationship(type: "HAS_WORD", direction: IN)
   mustContainCharacter: Character @relationship(type: "MUST_CONTAIN", direction: OUT)
@@ -220,6 +219,7 @@ type Word {
 
 type Character {
   character_index: Int!
+  character: String!
   paragraphMustContain: Paragraph @relationship(type: "MUST_CONTAIN", direction: IN)
   wordMustContain: Word @relationship(type: "MUST_CONTAIN", direction: IN)
   mayBePunctuation: Punctuation @relationship(type: "MAY_BE", direction: OUT)
@@ -293,12 +293,27 @@ type Ethos {
   score: [Float!]
   explanation: String!
   documentHasEthos: Document @relationship(type: "HAS_ETHOS", direction: IN)
+  contributesToAppeal: Appeal @relationship(type: "CONTRIBUTES_TO", direction: OUT)
+  appealtocredibilityAppealsTo: Appeal to Credibility  @relationship(type: "APPEALS_TO", direction: IN)
+  appealtoauthorityAppealsTo: Appeal to Authority @relationship(type: "APPEALS_TO", direction: IN)
+  appealtoreliablityAppealsTo: Appeal to Reliablity @relationship(type: "APPEALS_TO", direction: IN)
+  appealtopowerAppealsTo: Appeal to Power @relationship(type: "APPEALS_TO", direction: IN)
+  appealtotrustAppealsTo: Appeal to Trust @relationship(type: "APPEALS_TO", direction: IN)
 }
 
 type Pathos {
   score: [Float!]
   explanation: String!
   documentHasPathos: Document @relationship(type: "HAS_PATHOS", direction: IN)
+  contributesToAppeal: Appeal @relationship(type: "CONTRIBUTES_TO", direction: OUT)
+  appealtojoyAppealsTo: Appeal to Joy @relationship(type: "APPEALS_TO", direction: IN)
+  appealtosadnessAppealsTo: Appeal to Sadness @relationship(type: "APPEALS_TO", direction: IN)
+  appealtoanticipationAppealsTo: Appeal to Anticipation @relationship(type: "APPEALS_TO", direction: IN)
+  appealtosurpriseAppealsTo: Appeal to Surprise @relationship(type: "APPEALS_TO", direction: IN)
+  appealtotrustAppealsTo: Appeal to Trust @relationship(type: "APPEALS_TO", direction: IN)
+  appealtodisgustAppealsTo: Appeal to Disgust @relationship(type: "APPEALS_TO", direction: IN)
+  appealtorageAppealsTo: Appeal to Rage @relationship(type: "APPEALS_TO", direction: IN)
+  appealtofearAppealsTo: Appeal to fear @relationship(type: "APPEALS_TO", direction: IN)
 }
 
 type Logos {
@@ -307,6 +322,11 @@ type Logos {
   documentHasLogos: Document @relationship(type: "HAS_LOGOS", direction: IN)
   mustHavePremise: Premise @relationship(type: "MUST_HAVE", direction: OUT)
   mustHaveConclusion: Conclusion @relationship(type: "MUST_HAVE", direction: OUT)
+  contributesToAppeal: Appeal @relationship(type: "CONTRIBUTES_TO", direction: OUT)
+  premisestrengthInfluences: Premise Strength @relationship(type: "INFLUENCES", direction: IN)
+  consequencestrengthInfluences: Consequence Strength @relationship(type: "INFLUENCES", direction: IN)
+  validitystrengthInfluences: Validity Strength @relationship(type: "INFLUENCES", direction: IN)
+  soundnessstrengthInfluences: Soundness Strength  @relationship(type: "INFLUENCES", direction: IN)
 }
 
 type Style {
@@ -368,6 +388,9 @@ type Clarity {
   grammar_score: Float!
   readability_expl: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
+  persuasivecoefficientProductOf: persuasive coefficient @relationship(type: "PRODUCT_OF", direction: IN)
+  readabilityContributesTo: Readability @relationship(type: "CONTRIBUTES_TO", direction: IN)
+  grammarContributesTo: Grammar @relationship(type: "CONTRIBUTES_TO", direction: IN)
 }
 
 type Agents {
@@ -442,9 +465,11 @@ type Psychographics {
   personality: String!
   interests: [String!]
   beliefs: [String!]
+  vector: [Int!]
   externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
   listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
   documentownerMustHave: DocumentOwner @relationship(type: "MUST_HAVE", direction: IN)
+  personatensorBas: Persona Tensor @relationship(type: "BAS", direction: IN)
 }
 
 type Demographics {
@@ -454,18 +479,22 @@ type Demographics {
   ethnicity: String!
   income: Int!
   location: String!
+  vector: [Int!]
   externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
   listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
   documentownerMustHave: DocumentOwner @relationship(type: "MUST_HAVE", direction: IN)
+  personatensorBasedOn: Persona Tensor @relationship(type: "BASED_ON", direction: IN)
 }
 
 type Mindstate {
   emotional_state: String!
   cognitive_state: String!
   confidence: String!
+  vector: [Int!]
   externalactorsMustHave: ExternalActors @relationship(type: "MUST_HAVE", direction: IN)
   listenerMustHave: Listener @relationship(type: "MUST_HAVE", direction: IN)
   documentownerMustHave: DocumentOwner @relationship(type: "MUST_HAVE", direction: IN)
+  personatensorBasedOn: Persona Tensor @relationship(type: "BASED_ON", direction: IN)
 }
 
 type Bias {
@@ -672,4 +701,215 @@ type StyleScoreTensor {
   allegory: [String!]
   imagery: [String!]
   styleContains: Style @relationship(type: "CONTAINS", direction: IN)
+}
+
+type Persuasive Rersonance {
+  score: [Int!]
+  Valid_Probability: [Float!]
+  Invalid_Probability: [Float!]
+  Abstain_Probability: [Float!]
+  X_Probability: [Float!]
+  parameterOfPersuasiveforce: Persuasive Force @relationship(type: "PARAMETER_OF", direction: OUT)
+  parameterOfPersonatensor: Persona Tensor @relationship(type: "PARAMETER_OF", direction: OUT)
+}
+
+type Persuasive Force {
+  Vector: [Int!]
+  persuasiverersonanceParameterOf: Persuasive Rersonance @relationship(type: "PARAMETER_OF", direction: IN)
+  productOfRhetoricalweight: Rhetorical weight  @relationship(type: "PRODUCT_OF", direction: OUT)
+  productOfPersuasivecoefficient: persuasive coefficient @relationship(type: "PRODUCT_OF", direction: OUT)
+}
+
+type Persona Tensor {
+  Tensor: 
+  persuasiverersonanceParameterOf: Persuasive Rersonance @relationship(type: "PARAMETER_OF", direction: IN)
+  basedOnDemographics: Demographics @relationship(type: "BASED_ON", direction: OUT)
+  basPsychographics: Psychographics @relationship(type: "BAS", direction: OUT)
+  basedOnMindstate: Mindstate @relationship(type: "BASED_ON", direction: OUT)
+}
+
+type Rhetorical weight  {
+  Weights: Int!
+  documentContains: Document @relationship(type: "CONTAINS", direction: IN)
+  persuasiveforceProductOf: Persuasive Force @relationship(type: "PRODUCT_OF", direction: IN)
+  characterWeightFactorsIn: character_weight @relationship(type: "FACTORS_IN", direction: IN)
+  wordWeightFactorsIn: word_weight @relationship(type: "FACTORS_IN", direction: IN)
+  sentenceWeightFactorsIn: sentence_weight @relationship(type: "FACTORS_IN", direction: IN)
+  namedEntWeightFactorsIn: named_ent_weight @relationship(type: "FACTORS_IN", direction: IN)
+}
+
+type persuasive coefficient {
+  coefficient: Int!
+  persuasiveforceProductOf: Persuasive Force @relationship(type: "PRODUCT_OF", direction: IN)
+  productOfAppeal: Appeal @relationship(type: "PRODUCT_OF", direction: OUT)
+  productOfRelevancy: Relevancy @relationship(type: "PRODUCT_OF", direction: OUT)
+  productOfDistortion: Distortion  @relationship(type: "PRODUCT_OF", direction: OUT)
+  productOfClarity: Clarity @relationship(type: "PRODUCT_OF", direction: OUT)
+}
+
+type Appeal {
+  Score: Int!
+  ethosContributesTo: Ethos @relationship(type: "CONTRIBUTES_TO", direction: IN)
+  pathosContributesTo: Pathos @relationship(type: "CONTRIBUTES_TO", direction: IN)
+  logosContributesTo: Logos @relationship(type: "CONTRIBUTES_TO", direction: IN)
+  persuasivecoefficientProductOf: persuasive coefficient @relationship(type: "PRODUCT_OF", direction: IN)
+}
+
+type Relevancy {
+  Score: Int!
+  persuasivecoefficientProductOf: persuasive coefficient @relationship(type: "PRODUCT_OF", direction: IN)
+}
+
+type Distortion  {
+  Score: Int!
+  persuasivecoefficientProductOf: persuasive coefficient @relationship(type: "PRODUCT_OF", direction: IN)
+  biasesContributesTo: Biases @relationship(type: "CONTRIBUTES_TO", direction: IN)
+  fallaciesContributesTo: Fallacies @relationship(type: "CONTRIBUTES_TO", direction: IN)
+}
+
+type Readability {
+  readability_Score: Int!
+  readability_expl: String!
+  contributesToClarity: Clarity @relationship(type: "CONTRIBUTES_TO", direction: OUT)
+}
+
+type Grammar {
+  Grammar_score: Int!
+  Flaw_Count: Int!
+  grammer_expl: String!
+  contributesToClarity: Clarity @relationship(type: "CONTRIBUTES_TO", direction: OUT)
+}
+
+type Biases {
+  Score: Int!
+  Explanation: String!
+  contributesToDistortion: Distortion  @relationship(type: "CONTRIBUTES_TO", direction: OUT)
+}
+
+type Fallacies {
+  Score: Int!
+  Explanation: String!
+  contributesToDistortion: Distortion  @relationship(type: "CONTRIBUTES_TO", direction: OUT)
+}
+
+type character_weight {
+  Amount: Int!
+  factorsInRhetoricalweight: Rhetorical weight  @relationship(type: "FACTORS_IN", direction: OUT)
+}
+
+type word_weight {
+  Amount: Int!
+  factorsInRhetoricalweight: Rhetorical weight  @relationship(type: "FACTORS_IN", direction: OUT)
+}
+
+type sentence_weight {
+  Amount: Int!
+  factorsInRhetoricalweight: Rhetorical weight  @relationship(type: "FACTORS_IN", direction: OUT)
+}
+
+type named_ent_weight {
+  Amount: Int!
+  factorsInRhetoricalweight: Rhetorical weight  @relationship(type: "FACTORS_IN", direction: OUT)
+}
+
+type Appeal to Credibility  {
+  Score: Int!
+  Explanation: String!
+  appealsToEthos: Ethos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Authority {
+  Score: Int!
+  Explanation: String!
+  appealsToEthos: Ethos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Reliablity {
+  Score: Int!
+  Explanation: String!
+  appealsToEthos: Ethos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Power {
+  Score: Int!
+  Explanation: String!
+  appealsToEthos: Ethos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Trust {
+  Score: Int!
+  Explanation: String!
+  appealsToEthos: Ethos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Joy {
+  Score: 
+  Explanation: String!
+  appealsToPathos: Pathos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Sadness {
+  Score: Int!
+  Explanation: String!
+  appealsToPathos: Pathos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Anticipation {
+  Score: Int!
+  Explanation: String!
+  appealsToPathos: Pathos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Surprise {
+  Score: Int!
+  Explanation: String!
+  appealsToPathos: Pathos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Trust {
+  Score: Int!
+  Explanation: String!
+  appealsToPathos: Pathos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Disgust {
+  Score: Int!
+  Explanation: String!
+  appealsToPathos: Pathos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to Rage {
+  Score: Int!
+  Explanation: String!
+  appealsToPathos: Pathos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Appeal to fear {
+  Score: Int!
+  Explanation: String!
+  appealsToPathos: Pathos @relationship(type: "APPEALS_TO", direction: OUT)
+}
+
+type Premise Strength {
+  Score: 
+  Explanation: 
+  influencesLogos: Logos @relationship(type: "INFLUENCES", direction: OUT)
+}
+
+type Consequence Strength {
+  Score: 
+  Explanation: 
+  influencesLogos: Logos @relationship(type: "INFLUENCES", direction: OUT)
+}
+
+type Validity Strength {
+  Score: 
+  Explanation: 
+  influencesLogos: Logos @relationship(type: "INFLUENCES", direction: OUT)
+}
+
+type Soundness Strength  {
+  Score: 
+  Explanation: 
+  influencesLogos: Logos @relationship(type: "INFLUENCES", direction: OUT)
 }

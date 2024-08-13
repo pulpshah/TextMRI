@@ -228,7 +228,7 @@ app.get('/text-documents', async (req, res) => {
                         role
                         content
                         speaker
-
+                        rhteroical_weight
                     }
                 }
             }
