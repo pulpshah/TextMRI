@@ -247,6 +247,8 @@ app.get('/text-documents', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch documents for text node' });
     }
 });
+
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

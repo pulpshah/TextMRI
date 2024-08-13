@@ -1,0 +1,19 @@
+[  {
+    "speaker": "Jake Tapper",
+    "role": "Moderator",
+    "content": "We’re live from Georgia, a key battleground state in the race for the White House. In just moments, the current U.S. president will debate the former U.S. president as their parties’ presumptive nominees, a first in American history. We want to welcome our viewers in the United States and around the world to our studios in Atlanta. This is the CNN presidential debate.",
+    "turn_number": 1
+  },
+  {
+    "speaker": "Dana Bash",
+    "role": "Moderator",
+    "content": "This debate is being produced by CNN and it’s coming to you live on CNN, CNN International, CNN.com, CNN Max, and CNN Espanol. This is a pivotal moment between President Joe Biden and former President Donald Trump in their rematch for the nation’s highest office. Each will make his case to the American people with just over four months until Election Day. Good evening. I’m Dana Bash, anchor of CNN’s “Inside Politics” and co-anchor of “State Of The Union.”",
+    "turn_number": 2
+  },
+  {
+    "speaker": "Jake Tapper",
+    "role": "Moderator",
+    "content": "I’m Jake Tapper, anchor of CNN’s “The Lead” and co-anchor of “State Of The Union.” Dana and I will co-moderate this evening. Our job is to facilitate a debate between the two candidates tonight. Before we introduce them, we want to share the rules of the debate with the audience at home. Former President Trump will be on the left side of the screen. President Biden will be appearing on the right. A coin toss determined their positions. Each candidate will have two minutes to answer a question, and one minute each for responses and rebuttals. An additional minute for follow-up, clarification or response is at the moderators’ discretion.",
+    "turn_number": 3
+  }
+]
