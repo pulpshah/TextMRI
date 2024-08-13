@@ -3,10 +3,12 @@ import pandas as pd
 import pickle
 import os
 from bs4 import BeautifulSoup
+from requests.exceptions import RequestException, Timeout
 
 diff_token = 'f17dc30195a2724fa3be6d59b5183ff9'
-transcript_dir = 'TRANSCTIP_DIR'
-output_dir = 'OUTPUT_DIR'
+transcript_dir = 'directory'
+output_dir = 'directory'
+time_out = 30  
 
 # Takes in a directory (string) from which files are to be read
 # Loads all of the pickle files that are to be opened and processed by the script
@@ -22,28 +24,28 @@ def load_pickle_files(directory):
     return dataframes
 
 # Takes in a query (string)
-# Searches Diffbot's Knowledge Graph based 
-# on that query
+# Searches Diffbot's Knowledge Graph based on that query
 # Returns the first result of the query (string) in the form of a URL
 def query_knowledge_graph(query):
     diffbot_url = f'https://api.diffbot.com/v3/knowledgegraph?token={diff_token}&query={query}'
-    
-    response = requests.get(diffbot_url)
-    response.raise_for_status()
-    
+    try:
+        response = requests.get(diffbot_url, timeout=time_out)
+        response.raise_for_status()
+    except (RequestException, Timeout) as e:
+        print(f"Timeout error querying knowledge graph: {e}")
+        return None
+
     data = response.json()
     if 'objects' not in data:
-        print("No results found.")
+        print(f"No objects found for {query}.")
         return None
     
     results = data['objects']
     urls = [result.get('url') for result in results if 'url' in result]
-    if urls:
-        return urls
-    return None
+    return urls if urls else None
 
 # Takes in all the URLs (list of strings) found by Diffbot, key words (string) and groups (strings) associated with a turn/row in a dataframe
-# Iterates through all of the URLs and ensures that all of the strings in the specified columns actually appear in the web page of the URL
+# Iterates through all of the URLs and ensures that all/most of the strings in the specified columns actually appear in the web page of the URL
 # Returns the validated references (list of strings)
 def get_best_reference(refs, topics, groups, claims, args):
     better_refs = []
@@ -51,14 +53,14 @@ def get_best_reference(refs, topics, groups, claims, args):
         if len(better_refs) >= 3:
             break
         try:
-            response = requests.get(ref)
+            response = requests.get(ref, timeout=time_out)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
                 text = soup.get_text()
                 
-                topics_match = all(topic.lower() in text.lower() for topic in topics) 
+                topics_match = all(topic.lower() in text.lower() for topic in topics)
 
-                min_group_matches = int(0.9 * len(groups)) 
+                min_group_matches = int(0.9 * len(groups))
                 group_matches = sum(group.lower() in text.lower() for group in groups)
 
                 min_claim_matches = int(0.6 * len(claims))
@@ -70,8 +72,8 @@ def get_best_reference(refs, topics, groups, claims, args):
                 if (topics_match and group_matches >= min_group_matches) or (topics_match and group_matches >= min_group_matches and min_claim_matches <= claim_matches and min_arg_matches <= arg_matches):
                     better_refs.append(ref)
                     return better_refs
-        except requests.RequestException as e:
-            print(f"Error accessing {ref}: {e}")
+        except (RequestException, Timeout) as e:
+            print(f"Timeout error accessing {ref}: {e}")
     
     return None
 
@@ -82,14 +84,18 @@ def get_media(refs):
     refs_img_vids = {}
     for ref in refs:
         diffbot_url = f'https://api.diffbot.com/v3/analyze?token={diff_token}&url={ref}'
-        response = requests.get(diffbot_url)
-        response.raise_for_status()
-    
+        try:
+            response = requests.get(diffbot_url, timeout=time_out)
+            response.raise_for_status()
+        except (RequestException, Timeout) as e:
+            print(f"Timeout error accessing media for {ref}: {e}")
+            continue
+
         data = response.json()
         if 'objects' not in data:
-            print(f"No results found for {ref}.")
+            print(f"No objects found for {ref}.")
             continue
-    
+
         results = data['objects']
         
         image_urls = []
@@ -116,7 +122,6 @@ def get_media(refs):
         
     return refs_img_vids
 
-
 # Takes in a list (of strings)
 # Converts list (of strings) to a single comma-separated string
 # Returns the new string
@@ -132,18 +137,22 @@ def ref_type(refs):
     ref_types = {}
     for ref in refs:
         diffbot_url = f'https://api.diffbot.com/v3/analyze?token={diff_token}&url={ref}'
-        response = requests.get(diffbot_url)
-        response.raise_for_status()
-    
+        try:
+            response = requests.get(diffbot_url, timeout=time_out)
+            response.raise_for_status()
+        except (RequestException, Timeout) as e:
+            print(f"Timeout error accessing type for {ref}: {e}")
+            continue
+
         data = response.json()
         if 'objects' not in data:
-            print(f"No results found for {ref}.")
+            print(f"No objects found for {ref}.")
             continue
-    
+
         results = data['objects']
         ref_type = results[0].get('type').upper() if results else 'NO TYPE'
         if ref_type:
-           ref_types[ref] = ref_type
+            ref_types[ref] = ref_type
     
     return ref_types
 
@@ -161,10 +170,11 @@ def update_df(df, num_rows):
     df_subset = df.head(num_rows)
 
     for index, row in df_subset.iterrows():
+        print(f"Starting processing for row {index + 1}/{len(df_subset)}")
         for abs_claim_column, abs_arg_column, topic_column, group_column, ref_column in [
-            ('claim_of_facts_abstractive_claim', 'claim_of_facts_abstractive_argument','claim_of_facts_topic', 'claim_of_facts_impacted_groups_populations', 'facts_topic_ref'),
-            ('claim_of_value_abstractive_claim','claim_of_value_abstractive_argument','claim_of_value_topic', 'claim_of_value_impacted_groups_populations', 'value_topic_ref'),
-            ('claim_of_policy_abstractive_claim','claim_of_policy_abstractive_argument','claim_of_policy_topics', 'claim_of_policy_impacted_groups_populations', 'policy_topic_ref')]:
+            ('claim_of_facts_abstractive_claim', 'claim_of_facts_abstractive_argument', 'claim_of_facts_topic', 'claim_of_facts_impacted_groups_populations', 'facts_topic_ref'),
+            ('claim_of_value_abstractive_claim', 'claim_of_value_abstractive_argument', 'claim_of_value_topic', 'claim_of_value_impacted_groups_populations', 'value_topic_ref'),
+            ('claim_of_policy_abstractive_claim', 'claim_of_policy_abstractive_argument', 'claim_of_policy_topics', 'claim_of_policy_impacted_groups_populations', 'policy_topic_ref')]:
             
             topic_text = row.get(topic_column)
             group_text = row.get(group_column, [])
@@ -179,17 +189,21 @@ def update_df(df, num_rows):
                     claim_words = claim_text.split() if isinstance(claim_text, str) else []
                     arg_words = arg_text.split() if isinstance(arg_text, str) else []
 
-                    best_refs = get_best_reference(refs, topic_words, group_words.split(), claim_words, arg_words)
-                    if best_refs:
-                        best_ref_types = ref_type(best_refs)
-                        best_ref_media = get_media(best_refs)
-                        df.at[index, ref_column] = [(best_ref_types.get(ref), ref, best_ref_media.get(ref)) for ref in best_refs]
+                    try:
+                        best_refs = get_best_reference(refs, topic_words, group_words.split(), claim_words, arg_words)
+                        if best_refs:
+                            best_ref_types = ref_type(best_refs)
+                            best_ref_media = get_media(best_refs)
+                            df.at[index, ref_column] = [(best_ref_types.get(ref), ref, best_ref_media.get(ref)) for ref in best_refs]
+                    except Timeout:
+                        print(f"Timeout occurred for row {index + 1}. Moving to the next row.")
+                        break
 
     return df
 
 # Transfers all of the updated dataframes to the noted output directory
 for filename, df in load_pickle_files(transcript_dir).items():
-    updated_df = update_df(df, num_rows=5)
+    updated_df = update_df(df, num_rows=len(df))
     output_filepath = os.path.join(output_dir, filename)
     with open(output_filepath, 'wb') as file:
         pickle.dump(updated_df, file)
