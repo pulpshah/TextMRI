@@ -43,6 +43,7 @@ async function createTextTranscriptNode(name) {
 }
 
 async function createActorNode({ name, role }) {
+    console.log(`Creating actor: ${name}`);
     const mutation = `
     mutation {
         createActors(
@@ -53,7 +54,7 @@ async function createActorNode({ name, role }) {
                 connect: {
                     where: {
                     node: {
-                        id: "${data.transcript.id}
+                        id: "${data.transcript}"
                     }
                     }
                 }
@@ -73,45 +74,46 @@ async function createActorNode({ name, role }) {
         const response = await axios.post(API_URL, {
             query: mutation,
         });
-        actor = response.data.data.createActors.actors[0];
+        const actor = response.data.data.createActors.actors[0];
         data[actor.name] = actor.id;
+        console.log(`Created actor: ${actor.name}`);
     } catch (error) {
-        console.error("Error sending mutation:", error.message);
+        console.error("Error creating actor mutation:", error.message);
     }
 }
 
 async function createTopicNode({ name }) {
-    console.log(data.transcript.id)
     const mutation = `
-mutation {
-  createTopics(
-    input: {
-      name: "${name}",
-      texttranscriptMustContain: {
-        connect: {
-          where: {
-            node: {
-              id: "${data.transcript.id}"
+        mutation {
+        createTopics(
+            input: {
+            name: "${name}",
+            texttranscriptMustContain: {
+                connect: {
+                where: {
+                    node: {
+                    id: "${data.transcript}"
+                    }
+                }
+                }
             }
-          }
+            }
+        ) {
+            topics {
+                id,
+                name
+            }
         }
-      }
     }
-  ) {
-    topics {
-      id,
-      name
-    }
-  }
-}
 
 `;
     try {
         const response = await axios.post(API_URL, {
             query: mutation,
         });
-        topic = response.data.data.createTopics.topics[0];
-        data[topic.name] = topic.id;
+        const topic = response.data.data.createTopics.topics[0];
+        data.topics[topic.name] = topic.id;
+        console.log(`Created topic: ${topic.name}`);
     } catch (error) {
         console.error("Error creating topic mutation:", error.message);
     }
@@ -129,93 +131,94 @@ async function createTurnNode(info) {
         }
     }
     const mutation = `
-mutation {
-    createTurns(
-      input: {
-        turn_number: ${turn_number},
-        content: "${content}",
-        texttranscriptMustContain: {
-          connect: {
-            where: {
-              node: {
-                id: "${data.transcript.id}"
-              }
+        mutation {
+            createTurns(
+            input: {
+                turn_number: ${turn_number},
+                content: "${content}",
+                texttranscriptMustContain: {
+                connect: {
+                    where: {
+                    node: {
+                        id: "${data.transcript}"
+                    }
+                    }
+                }
+                }
+                talkedAboutTopic: {
+                connect: {
+                    where: {
+                    node: {
+                        id: "${data.topics[parsedTopics[0]]}"
+                    }
+                    }
+                }
+                }
+                actorSpokeIn: {
+                connect: {
+                    where: {
+                    node: {
+                        id: "6b30fb1c-095a-4ef1-b8d1-8ed3b39f50a2"
+                    }
+                    }
+                }
+                }
             }
-          }
-        }
-        talkedAboutTopic: {
-          connect: {
-            where: {
-              node: {
-                id: "${data.topics[parsedTopics[0]].id}"
-              }
+            ){
+            turns {
+                id,
+                turn_number,
+                content
             }
-          }
         }
-        actorSpokeIn: {
-          connect: {
-            where: {
-              node: {
-                id: "6b30fb1c-095a-4ef1-b8d1-8ed3b39f50a2"
-              }
-            }
-          }
-        }
-      }
-    ){
-      turns {
-        id,
-        turn_number,
-        content
-      }
     }
-  }
   
   `;
 
-    // let turn_id;
-    // try {
-    //     const response = await axios.post(API_URL, {
-    //         query: mutation,
-    //     });
-    //     turn_id = response.data.data.createTurns.turns[0];
-    // } catch (error) {
-    //     console.error("Error sending mutation:", error.message);
-    // }
+    let turn_id;
+    try {
+        const response = await axios.post(API_URL, {
+            query: mutation,
+        });
+        turn_id = response.data.data.createTurns.turns[0].id;
+        console.log(`Created turn: ${turn_id}`);
+    } catch (error) {
+        console.error("Error sending turn mutation:", error.message);
+    }
 
-    // if (parsedTopics.length > 1) {
-    //     for (let i = 1; i < parsedTopics.length; i++) {
-    //         const updateMutation = `
-    //             mutation {
-    //                 updateTurns(
-    //                     connect: {
-    //                         talkedAboutTopic: {
-    //                             where: { 
-    //                                 node: { 
-    //                                     id: "${data.topics[parsedTopics[i]].id}" 
-    //                                 } 
-    //                             }
-    //                         }
-    //                     },
-    //                     where: { id: ${turn_id}}
-    //                 ) {
-    //                     turns {
-    //                     id
-    //                     turn_number
-    //                     content
-    //                     }
-    //                 }
-    //             }
-    //         `;
-    //         try {
-    //             await axios.post(API_URL, {
-    //                 query: updateMutation,
-    //             });
-    //         } catch (error) {
-    //             console.error("Error sending mutation:", error.message);
-    //         }
-    //     }
-    // }
+    if (parsedTopics.length > 1) {
+        for (let i = 1; i < parsedTopics.length; i++) {
+            const updateMutation = `
+                mutation {
+                    updateTurns(
+                        connect: {
+                            talkedAboutTopic: {
+                                where: {
+                                    node: {
+                                        id: "${data.topics[parsedTopics[i]]}"
+                                    }
+                                }
+                            }
+                        },
+                        where: { id: "${turn_id}"}
+                    ) {
+                        turns {
+                            id
+                            turn_number
+                            content
+                        }
+                    }
+                }
+            `;
+            try {
+                await axios.post(API_URL, {
+                    query: updateMutation,
+                });
+            } catch (error) {
+                console.error("Error sending mutation:", error.message);
+            }
+        }
+    }
 }
 
 const inputPath =
@@ -226,18 +229,15 @@ async function createPIO() {
         "June 27, 2024 Presidential Debate Transcript"
     );
 
-    console.log(data.transcript.id)
-
     fs.readFile(inputPath, function (err, fileData) {
         const records = parse(fileData, {
             columns: true,
             skip_empty_lines: true,
         });
-    
-        // for(let i = 0; i < records.length; i++) {
-        //     createTurnNode(records[i]);
-        // }
-        createTurnNode(records[0]);
+
+        for(let i = 0; i < records.length; i++) {
+            createTurnNode(records[i]);
+        }
     });
 }
 
