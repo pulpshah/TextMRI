@@ -149,7 +149,6 @@ type Document {
   speaker: String!
   content: String!
   role: String!
-  rhteroical_weight: [Int!]
   textHas: Text @relationship(type: "HAS", direction: IN)
   hasEthosEthos: Ethos @relationship(type: "HAS_ETHOS", direction: OUT)
   hasPathosPathos: Pathos @relationship(type: "HAS_PATHOS", direction: OUT)
@@ -728,6 +727,7 @@ type PersonaTensor {
 
 type RhetoricalWeight  {
   weights: Int!
+  rhteroical_weight: [Int!]!
   documentContains: Document @relationship(type: "CONTAINS", direction: IN)
   persuasiveforceProductOf: PersuasiveForce @relationship(type: "PRODUCT_OF", direction: IN)
   characterweightFactorsIn: CharacterWeight @relationship(type: "FACTORS_IN", direction: IN)
