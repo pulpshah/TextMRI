@@ -248,6 +248,37 @@ app.get('/text-documents', async (req, res) => {
     }
 });
 
+app.get('/text/:name/knowledge', async (req, res) => {
+    try {
+        const { name } = req.params;
+
+        // Define the GraphQL query
+        const query = gql`
+            query($textName: String!) {
+                text(where: { name: $textName }) {
+                    knowledge {
+                        typr
+                        explanation
+                    }
+                }
+            }
+        `;
+
+        // Set the GraphQL endpoint
+        const endpoint = 'http://localhost:4000'; // Update with your actual GraphQL endpoint
+
+        // Execute the query
+        const variables = { textName: name };
+        const data = await request(endpoint, query, variables);
+
+        // Send the result back as the response
+        res.status(200).json(data);
+    } catch (error) {
+        console.error('Error fetching knowledge for text:', error);
+        res.status(500).json({ error: 'Failed to fetch knowledge for text' });
+    }
+});
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;
