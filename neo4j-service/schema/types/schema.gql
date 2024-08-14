@@ -38,6 +38,7 @@ type Actor {
 type Turn {
   turn_number: Int!
   content: String!
+  id: ID! @id
   texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   actorSpokeIn: Actor @relationship(type: "SPOKE_IN", direction: IN)
   talkedAboutTopic: Topic @relationship(type: "TALKED_ABOUT", direction: OUT)
@@ -76,8 +77,10 @@ type Reference {
 
 type Topic {
   name: String!
+  id: ID! @id
   texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   turnTalkedAbout: Turn @relationship(type: "TALKED_ABOUT", direction: IN)
+  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type Image {
@@ -158,8 +161,8 @@ type Document {
   mustContainHumor: Humor @relationship(type: "MUST_CONTAIN", direction: OUT)
   mustContainClarity: Clarity @relationship(type: "MUST_CONTAIN", direction: OUT)
   containsSectionSection: Section @relationship(type: "CONTAINS_SECTION", direction: OUT)
-  mustContainTopic: Topic @relationship(type: "MUST_CONTAIN", direction: OUT)
   containsRhetoricalweight: RhetoricalWeight  @relationship(type: "CONTAINS", direction: OUT)
+  mustContainTopic: Topic @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
 type Paragraph {
@@ -681,11 +684,6 @@ type Conditional {
   purpose: String!
   premise: String!
   knowledgeMayBe: Knowledge @relationship(type: "MAY_BE", direction: IN)
-}
-
-type Topic {
-  name: String!
-  documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
 type StyleScoreTensor {
