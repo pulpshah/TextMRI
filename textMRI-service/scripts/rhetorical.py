@@ -78,16 +78,17 @@ def main():
         print("Usage: python script.py <file_path>")
         sys.exit(1)
     
-    file_path = sys.argv[1]
-    
-    if not os.path.isfile(file_path):
-        print(f"{file_path} is not a valid file.")
-        sys.exit(2)
+    # file_path = sys.argv[1]
+    data = sys.argv[1]
+    # if not os.path.isfile(file_path):
+    #     print(f"{file_path} is not a valid file.")
+    #     sys.exit(2)
     
     try:
         # Open the file with UTF-8 encoding
-        with open(file_path, 'r', encoding='utf-8') as file:
-            transcript = json.load(file)
+        # with open(file_path, 'r', encoding='utf-8') as file:
+        #     transcript = json.load(file)
+        transcript = json.loads(data)
         
         hashtable = {item['turn_number']: item['content'] for item in transcript}
         rhetorical_weights = rhetoricalWeight(hashtable)
