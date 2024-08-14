@@ -1,0 +1,45 @@
+services:
+  neo4j-service:
+    build: ./neo4j-service
+    image: neo4j-service
+    ports:
+      - 4000:4000
+    volumes:
+      - ./neo4j-service:/app
+    networks:
+      - app-network
+    develop:
+      watch:
+        - path: ./neo4j-service/package.json
+          action: rebuild
+        - path: ./neo4j-service/package-lock.json
+          action: rebuild
+        - path: ./neo4j-service
+          target: /app
+          action: sync
+
+  textMRI-service: 
+    depends_on: 
+      - neo4j-service
+    build:
+      context: ./textMRI-service
+      target: development
+    image: textmri-service
+    volumes:
+      - ./textMRI-service:/app
+    ports: 
+      - 4001:4001
+    networks:
+      - app-network
+    develop:
+      watch:
+        - path: ./textMRI-service/package.json
+          action: rebuild
+        - path: ./textMRI-service/package-lock.json
+          action: rebuild
+        - path: ./textMRI-service
+          target: /app
+          action: sync
+
+networks:
+  app-network:

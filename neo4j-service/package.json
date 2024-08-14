@@ -22,7 +22,7 @@
   },
   "contributors": [],
   "scripts": {
-    "dev": "node index.js",
+    "dev": "nodemon index.js",
     "test": ""
   },
   "dependencies": {

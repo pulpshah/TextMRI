@@ -7,6 +7,7 @@ COPY ./ ./
 # RUN npm run build
 ENV PORT=4001
 EXPOSE $PORT
+EXPOSE 4000
 CMD ["npm", "run", "dev"]
 
 
