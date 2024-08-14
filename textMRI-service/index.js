@@ -2,54 +2,56 @@ import express from 'express';
 import { request, gql } from 'graphql-request';
 import bodyParser from 'body-parser';
 import { spawn } from 'child_process';
+// const { createRhetoricalNodes } = require('./parse');
 
 const app = express();
 app.use(bodyParser.json());
 
-app.post('/transcript', async (req, res) => {
-    const { transcript } = req.body;
+// app.post('/transcript', async (req, res) => {
+//     const { transcript } = req.body;
 
-    if (!transcript) {
-        return res.status(400).json({ error: 'Transcript is required' });
-    }
+//     if (!transcript) {
+//         return res.status(400).json({ error: 'Transcript is required' });
+//     }
 
-    try {
-        const result = await extractSentenceData(JSON.stringify(transcript));
+//     try {
+//         const result = await extractSentenceData(JSON.stringify(transcript));
 
-        // 2. Prepare GraphQL mutation with ML results
-        // const mutation = gql`
-        //     mutation($input: [TextTranscriptCreateInput!]!) {
-        //         createTextTranscripts(input: $input) {
-        //             textTranscripts {
-        //                 name
-        //             }
-        //         }
-        //     }
-        // `;
+//         // 2. Prepare GraphQL mutation with ML results
+//         // const mutation = gql`
+//         //     mutation($input: [TextTranscriptCreateInput!]!) {
+//         //         createTextTranscripts(input: $input) {
+//         //             textTranscripts {
+//         //                 name
+//         //             }
+//         //         }
+//         //     }
+//         // `;
 
-        // const variables = {
-        //     input: [
-        //         {
-        //             name: result.name
-        //         }
-        //     ]
-        // };
+//         // const variables = {
+//         //     input: [
+//         //         {
+//         //             name: result.name
+//         //         }
+//         //     ]
+//         // };
 
-        // const endpoint = 'http://localhost:4000/';
-        // const response = await request(endpoint, mutation, variables);
+//         // const endpoint = 'http://localhost:4000/';
+//         // const response = await request(endpoint, mutation, variables);
 
-        res.status(200).json(JSON.parse(result));
-    } catch (error) {
-        console.error('Error processing transcript:', error);
-        res.status(500).json({ error: 'Internal Server Error' + error });
-    }
-});
+//         res.status(200).json(JSON.parse(result));
+//     } catch (error) {
+//         console.error('Error processing transcript:', error);
+//         res.status(500).json({ error: 'Internal Server Error' + error });
+//     }
+// });
 
 app.get('/transcript', async (req, res) => {
     try {
         const diffbot_data = await extractDiffbot()
 
         res.status(200).json(JSON.parse(diffbot_data));
+
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' + error });
@@ -120,164 +122,91 @@ async function extractSentenceData(transcript) {
     });
 }
 
-app.get('/texts', async (req, res) => {
+app.post('/transcript', async (req, res) => {
     try {
-        // Define the GraphQL query to get all text nodes
-        const query = gql`
-            {
-                texts {
-                    name
-                    
-                }
-            }
-        `;
+        const weight= await extractWeights(req.body)
+        // const clause = await extractClause(req.body)
+        const parsedWeight = JSON.parse(weight);
+        // const parsedClause = JSON.parse(clause);
+        
 
-        // Replace with your GraphQL endpoint
-        const endpoint = 'http://localhost:4000';
+        res.status(200).json(parsedWeight);
 
-        // Execute the query
-        const data = await request(endpoint, query);
-
-        // Send the data back as the response
-        res.status(200).json(data);
     } catch (error) {
-        console.error('Error fetching text nodes:', error);
-        res.status(500).json({ error: 'Failed to fetch text nodes' });
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' + error });
     }
 });
 
-app.get('/text', async (req, res) => {
-    try {
-        const { name } = req.query; // Get the 'name' parameter from the query string
+async function extractWeights(transcript) {
+    return new Promise((resolve, reject) => {
+        console.log('Running Python script: ' );
 
-        if (!name) {
-            return res.status(400).json({ error: 'Name query parameter is required' });
-        }
+        const inputJson = JSON.stringify(transcript);
 
-        // Define the GraphQL query to get text nodes by name
-        const query = gql`
-            query GetTextsByName($name: String!) {
-                texts(where: { name: $name }) {
-                    name
-                   
-                }
+        const pythonScript = spawn('python', ['scripts/rhetorical.py', inputJson]);
+
+        let output = '';
+        let errorOutput = '';
+
+        pythonScript.stdout.on('data', (data) => {
+            output += data.toString();
+        });
+
+        pythonScript.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+
+        pythonScript.on('close', (code) => {
+            if (code === 0) {
+                resolve(output);
+            } else {
+                console.error(`Python script error output: ${errorOutput}`);
+                reject(new Error(`Python script failed with code ${code}: ${errorOutput}`));
             }
-        `;
+        });
 
-        // Replace with your GraphQL endpoint
-        const endpoint = 'http://localhost:4000';
+        pythonScript.on('error', (err) => {
+            reject(new Error(`Failed to start subprocess: ${err.message}`));
+        });
+    });
+}
 
-        // Execute the query with the name as a variable
-        const data = await request(endpoint, query, { name });
+async function extractClause(transcript) {
+    return new Promise((resolve, reject) => {
+        console.log('Running Python script: ' );
 
-        // Send the data back as the response
-        res.status(200).json(data);
-    } catch (error) {
-        console.error('Error fetching text nodes:', error);
-        res.status(500).json({ error: 'Failed to fetch text nodes' });
-    }
-});
+        const inputJson = JSON.stringify(transcript);
 
-// app.get('/textid', async (req, res) => {
-//     try {
-//         const { id } = req.query; // Get the 'id' parameter from the query string
+        const pythonScript = spawn('python', ['scripts/clause_data.py', inputJson], {
+            encoding: 'utf-8'
+        });
 
-//         if (!id) {
-//             return res.status(400).json({ error: 'ID query parameter is required' });
-//         }
+        let output = '';
+        let errorOutput = '';
 
-//         // Define the GraphQL query to get a text node by id
-//         const query = gql`
-//             query GetTextById($id: ID!) {
-//                 text(where: { id: $id }) {
-//                     id
-//                     name
+        pythonScript.stdout.on('data', (data) => {
+            output += data.toString();
+        });
 
-//                 }
-//             }
-//         `;
+        pythonScript.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
 
-//         // Replace with your GraphQL endpoint
-//         const endpoint = 'http://localhost:4000';
-
-//         // Execute the query with the id as a variable
-//         const data = await request(endpoint, query, { id });
-
-//         // Send the data back as the response
-//         res.status(200).json(data);
-//     } catch (error) {
-//         console.error('Error fetching text node:', error);
-//         res.status(500).json({ error: 'Failed to fetch text node' });
-//     }
-// });
-
-app.get('/text-documents', async (req, res) => {
-    try {
-        const { name } = req.query; // Get the 'name' parameter from the query string
-
-        if (!name) {
-            return res.status(400).json({ error: 'Name query parameter is required' });
-        }
-
-        // Define the GraphQL query to get documents by text name
-        const query = gql`
-            query GetDocumentsByTextName($name: String!) {
-                texts(where: { name: $name }) {
-                    name
-                    documents {
-                        role
-                        content
-                        speaker
-                        rhteroical_weight
-                    }
-                }
+        pythonScript.on('close', (code) => {
+            if (code === 0) {
+                resolve(output);
+            } else {
+                console.error(`Python script error output: ${errorOutput}`);
+                reject(new Error(`Python script failed with code ${code}: ${errorOutput}`));
             }
-        `;
+        });
 
-        // Replace with your GraphQL endpoint
-        const endpoint = 'http://localhost:4000';
-
-        // Execute the query with the name as a variable
-        const data = await request(endpoint, query, { name });
-
-        // Send the data back as the response
-        res.status(200).json(data);
-    } catch (error) {
-        console.error('Error fetching documents for text node:', error);
-        res.status(500).json({ error: 'Failed to fetch documents for text node' });
-    }
-});
-
-app.get('/text/:name/knowledge', async (req, res) => {
-    try {
-        const { name } = req.params;
-
-        // Define the GraphQL query
-        const query = gql`
-            query($textName: String!) {
-                text(where: { name: $textName }) {
-                    knowledge {
-                        typr
-                        explanation
-                    }
-                }
-            }
-        `;
-
-        // Set the GraphQL endpoint
-        const endpoint = 'http://localhost:4000'; // Update with your actual GraphQL endpoint
-
-        // Execute the query
-        const variables = { textName: name };
-        const data = await request(endpoint, query, variables);
-
-        // Send the result back as the response
-        res.status(200).json(data);
-    } catch (error) {
-        console.error('Error fetching knowledge for text:', error);
-        res.status(500).json({ error: 'Failed to fetch knowledge for text' });
-    }
-});
+        pythonScript.on('error', (err) => {
+            reject(new Error(`Failed to start subprocess: ${err.message}`));
+        });
+    });
+}
 
 
 // Start the server
