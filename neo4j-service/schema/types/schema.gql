@@ -149,6 +149,7 @@ type Document {
   speaker: String!
   content: String!
   role: String!
+  id: ID! @id
   textHas: Text @relationship(type: "HAS", direction: IN)
   hasEthosEthos: Ethos @relationship(type: "HAS_ETHOS", direction: OUT)
   hasPathosPathos: Pathos @relationship(type: "HAS_PATHOS", direction: OUT)
