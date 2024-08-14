@@ -99,22 +99,28 @@ def main():
                 weights.append({
                     "rhetorical_weight":rhetorical_weights[0][i],   
                     "sentence_weight":rhetorical_weights[1].get(turn, 0), 
-                    "word_weight":rhetorical_weights[2].get(turn, 0) ,  
-                    "character_weight":rhetorical_weights[3].get(turn, 0) ,   
+                    "word_weight":rhetorical_weights[2].get(turn, 0),  
+                    "character_weight":rhetorical_weights[3].get(turn, 0),   
                     "namedent_weight":rhetorical_weights[4].get(turn, 0)             
                 
                 })
         print(json.dumps(weights))
         return weights
     except json.JSONDecodeError:
-        print(f"Invalid JSON data in {file_path}")
-        sys.exit(2)
-    except UnicodeDecodeError:
-        print(f"Error decoding the file {file_path}. Ensure it is encoded in UTF-8.")
+        print("Invalid JSON string.")
         sys.exit(2)
     except Exception as e:
-        print(f"Error processing {file_path}: {e}")
+        print(f"Error processing JSON string: {e}")
         sys.exit(2)
+    # except json.JSONDecodeError:
+    #     print(f"Invalid JSON data in {file_path}")
+    #     sys.exit(2)
+    # except UnicodeDecodeError:
+    #     print(f"Error decoding the file {file_path}. Ensure it is encoded in UTF-8.")
+    #     sys.exit(2)
+    # except Exception as e:
+    #     print(f"Error processing {file_path}: {e}")
+    #     sys.exit(2)
 
 if __name__ == "__main__":
     main()
