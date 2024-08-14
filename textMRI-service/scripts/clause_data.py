@@ -1,8 +1,9 @@
 from openai import OpenAI
 import json
 import pandas as pd
+import sys
 
-client = OpenAI(api_key="YOUR-API-KEY")
+client = OpenAI(api_key="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")
 
 def is_valid_json(json_str):
     try:
@@ -35,7 +36,7 @@ def handle_response(response_text):
 ##Use pd.json_normalize when trying to convert the returned list to a DataFrame
 
 
-def extractClauses(df):
+def extractClauses(df ,row_limit):
 
     independent_clause_rules = [
     "A clause that can stand alone as a complete sentence.",
@@ -63,6 +64,8 @@ def extractClauses(df):
     ]
 
     clauses = []
+    if row_limit:
+        df = df.head(row_limit)
     #for row in df.itertuples():
     for idx, row in df.iterrows():
         system_prompt_epl_scores = """You are an AI Rhetorical Analysis Expert. Your job is to analyze a sentence and separate it into the independent and dependent clauses composing it. """ +\
@@ -94,3 +97,24 @@ def extractClauses(df):
         clauses.append(result)
 
     return clauses
+
+def main():
+    # df = pd.read_pickle('TextMRI/textMRI-service/ouputs/June 27, 2024 Presidential Debate Transcript (2).pkl')
+    if len(sys.argv) < 2:
+        print("Usage: python script.py <json_string>")
+        sys.exit(1)
+    json_string = sys.argv[1]
+    try:
+        data = json.loads(json_string)
+        df = pd.DataFrame(data)
+        clauses = extractClauses(df, 1)
+        print(clauses)
+    except json.JSONDecodeError:
+        print("Invalid JSON string.")
+        sys.exit(2)
+    except Exception as e:
+        print(f"Error processing JSON string: {e}")
+        sys.exit(2)
+
+if __name__ == "__main__":
+    main()
