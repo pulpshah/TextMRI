@@ -66,15 +66,11 @@ def rhetoricalWeight(textTable):
     wordsum = WordWeight(textTable)
     sentsum = sentWeight(textTable)
     namedentsum = namedentWeight(textTable)
-    print(charsum)
-    print(wordsum)
-    print(sentsum)
-    print(namedentsum)
     rhetorical_weights = []
     for turn in textTable:
         turn_weight = charsum[turn] + wordsum[turn] + sentsum[turn] + namedentsum[turn]
         rhetorical_weights.append(turn_weight)
-    return rhetorical_weights
+    return rhetorical_weights, sentsum, wordsum, charsum, namedentsum
 
 #takes in json transcript with turn number and content and returns an array of rhetorical weight
 def main():
@@ -95,8 +91,20 @@ def main():
         
         hashtable = {item['turn_number']: item['content'] for item in transcript}
         rhetorical_weights = rhetoricalWeight(hashtable)
-        print(rhetorical_weights)
-        return rhetorical_weights
+        # list composed of [rhetorical weight],{turn:charsum}, {turn:wordsum}, {turn:sentsum}, {turn:namedentsum} 
+        weights = []
+        for i in range(len(rhetorical_weights[0])):
+                turn = i+1
+                weights.append({
+                    "rhetorical_weight":rhetorical_weights[0][i],   
+                    "sentence_weight":rhetorical_weights[1].get(turn, 0), 
+                    "word_weight":rhetorical_weights[2].get(turn, 0) ,  
+                    "character_weight":rhetorical_weights[3].get(turn, 0) ,   
+                    "namedent_weight":rhetorical_weights[4].get(turn, 0)             
+                
+                })
+        print(json.dumps(weights))
+        return weights
     except json.JSONDecodeError:
         print(f"Invalid JSON data in {file_path}")
         sys.exit(2)
