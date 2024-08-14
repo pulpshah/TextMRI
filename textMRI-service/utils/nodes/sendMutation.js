@@ -9,7 +9,7 @@ export async function sendMutation(mutation, { name, type }, returnData = true) 
         });
 
         const mutationName = `create${capitalizeString(type)}`
-        console.log(`Successfully created ${name} for ${type} mutation: \n`, response.data.data[mutationName][type]);
+        console.log(`Successfully ${returnData ? "created" : "updated"} ${name} for ${type} mutation: \n`, response.data.data[mutationName][type]);
         if(returnData) return response.data.data[mutationName][type];
     } catch (error) {
         console.error(`Error sending ${name} mutation: \n`, error.message);

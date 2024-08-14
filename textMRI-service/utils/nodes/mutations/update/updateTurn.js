@@ -1,6 +1,6 @@
 import { sendMutation } from "../../sendMutation.js";
 
-export async function updateTopicNode(topic_id, turn_id) {
+export async function updateTurnNodeWithTopics(topic_id, turn_id) {
     const mutation = `
         mutation {
             updateTurns(
@@ -23,5 +23,5 @@ export async function updateTopicNode(topic_id, turn_id) {
             }
         }
     `;
-    return sendMutation(mutation, { name, type: "turns" }, false);
+    return sendMutation(mutation, { name: `topic id: ${turn_id} relationship`, type: "turns" }, false);
 }
