@@ -92,7 +92,7 @@ def main():
         
         hashtable = {item['turn_number']: item['content'] for item in transcript}
         rhetorical_weights = rhetoricalWeight(hashtable)
-        # list composed of [rhetorical weight],{turn:charsum}, {turn:wordsum}, {turn:sentsum}, {turn:namedentsum} 
+        
         weights = []
         for i in range(len(rhetorical_weights[0])):
                 turn = i+1
@@ -105,7 +105,7 @@ def main():
                 
                 })
         print(json.dumps(weights))
-        return weights
+        sys.stdout.flush()
     except json.JSONDecodeError:
         print("Invalid JSON string.")
         sys.exit(2)
