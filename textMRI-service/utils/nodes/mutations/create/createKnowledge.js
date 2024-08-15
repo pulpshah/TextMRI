@@ -17,5 +17,5 @@ export async function createKnowledgeNode(type, explanation, text_id) {
             }
         }
     `;
-    return sendMutation(mutation,{name: "type" ,type: "knowledges"});
+    return sendMutation(mutation,{name: `${type} knowledge` ,type: "knowledges"});
 }
