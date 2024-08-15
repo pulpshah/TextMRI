@@ -7,7 +7,6 @@ COPY ./ ./
 # RUN npm run build
 ENV PORT=4001
 EXPOSE $PORT
-EXPOSE 4000
 CMD ["npm", "run", "dev"]
 
 
@@ -18,6 +17,6 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 COPY --from=development /usr/src/app ./
-ENV PORT 4000
+ENV PORT 4001
 EXPOSE $PORT
 CMD ["node", "dist/main"]
