@@ -3,8 +3,7 @@ import json
 import sys
 import os
 
-# api_key = os.getenv('OPENAI_API_KEY')
-api_key = "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"
+api_key = os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key = api_key)
 
 def get_knowledge_type(text):
