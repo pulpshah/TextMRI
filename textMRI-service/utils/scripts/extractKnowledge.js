@@ -6,7 +6,7 @@ export async function extractKnowledge(content) {
     return new Promise((resolve, reject) => {
         console.log('Running Python script to extract knowledge: ' );
 
-        const pythonScript = spawn('python3', ['knowledge.py', content], {
+        const pythonScript = spawn('python', ['scripts/knowledge.py', content], {
             env: process.env
         });
 

@@ -1,4 +1,4 @@
-import { sendMutation } from "../../sendMutation";
+import { sendMutation } from "../../sendMutation.js";
 
 export async function createKnowledgeNode(type, explanation, text_id) {
     const mutation = `
