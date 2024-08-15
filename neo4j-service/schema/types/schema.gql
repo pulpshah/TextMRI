@@ -177,11 +177,11 @@ type Paragraph {
 
 type Sentence {
   setence: String!
-  number_of_clauses: Int
-  word_sum: Int
+  number_of_clauses: Int!
+  word_sum: Int!
   sentence_index: Int!
-  amount_dep_clause: Int
-  amount_indep_clause: Int
+  amount_dep_clause: Int!
+  amount_indep_clause: Int!
   paragraphHasSentence: Paragraph @relationship(type: "HAS_SENTENCE", direction: IN)
   hasClauseIndependentclause: IndependentClause @relationship(type: "HAS_CLAUSE", direction: OUT)
   hasClauseDependentclause: DependentClause @relationship(type: "HAS_CLAUSE", direction: OUT)
@@ -727,8 +727,8 @@ type PersonaTensor {
 }
 
 type RhetoricalWeight  {
-  weights: Int!
-  rhteroical_weight: [Int!]!
+  weight: Int!
+  rhetorical_weight: [Int!]!
   documentContains: Document @relationship(type: "CONTAINS", direction: IN)
   persuasiveforceProductOf: PersuasiveForce @relationship(type: "PRODUCT_OF", direction: IN)
   characterweightFactorsIn: CharacterWeight @relationship(type: "FACTORS_IN", direction: IN)
