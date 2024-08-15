@@ -5,5 +5,5 @@ export { createTopicNode } from "./mutations/create/createTopic.js";
 export { createTurnNode } from "./mutations/create/createTurn.js";
 export { createDocumentNode } from "./mutations/create/createDocument.js";
 export { createKnowledgeNode } from "./mutations/create/createKnowledge.js";
-export { createClarityNode } from "./mutations/create/createClarity.js";
-export { createHumorNode } from "./mutations/create/createHumor.js";
+export { createClarityNode } from "./mutations/create/rhetoricNodes/createClarity.js";
+export { createHumorNode } from "./mutations/create/rhetoricNodes/createHumor.js";

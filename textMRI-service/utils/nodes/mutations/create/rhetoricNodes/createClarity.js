@@ -1,4 +1,4 @@
-import { sendMutation } from "../../sendMutation.js";
+import { sendMutation } from "../../../sendMutation.js";
 
 export async function createClarityNode(score, readability_score, readability_expl, grammar_score, grammar_expl, document_id ){
     const mutation = `

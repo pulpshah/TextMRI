@@ -1,4 +1,4 @@
-import { sendMutation } from "../../sendMutation.js";
+import { sendMutation } from "../../../sendMutation.js";
 
 export async function createHumorNode(score, explanation, document_id ){
     const mutation = `
