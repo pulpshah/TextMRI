@@ -386,10 +386,6 @@ type Humor {
 
 type Clarity {
   score: Float!
-  grammar_expl: String!
-  readability_score: Float!
-  grammar_score: Float!
-  readability_expl: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
   persuasivecoefficientProductOf: PersuasiveCoefficient @relationship(type: "PRODUCT_OF", direction: IN)
   readabilityContributesTo: Readability @relationship(type: "CONTRIBUTES_TO", direction: IN)
@@ -767,15 +763,14 @@ type Distortion  {
 }
 
 type Readability {
-  readability_Score: Int!
-  readability_expl: String!
+  readability_score: Float!
+  explanation: String!
   contributesToClarity: Clarity @relationship(type: "CONTRIBUTES_TO", direction: OUT)
 }
 
 type Grammar {
-  Grammar_score: Int!
-  Flaw_Count: Int!
-  grammer_expl: String!
+  grammar_score: Float!
+  explanation: String!
   contributesToClarity: Clarity @relationship(type: "CONTRIBUTES_TO", direction: OUT)
 }
 

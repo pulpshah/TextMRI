@@ -100,13 +100,13 @@ def main():
     grammar_expl = grammar['explanation']
     score = readability_score * grammar_score
 
-    clarity=[{
+    clarity = {
         "score" : score,
         "readability_score": readability_score,
-        "readability_expl": readability_expl,
+        "readability_explanation": readability_expl,
         "grammar_score": grammar_score,
-        "grammar_expl": grammar_expl
-    }]
+        "grammar_explanation": grammar_expl
+    }
 
     print(json.dumps(clarity))
     sys.stdout.flush()
