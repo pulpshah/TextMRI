@@ -3,6 +3,7 @@ import { API_URL } from "../neo4j_API_URL.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+// Sends a mutation to the Neo4j database
 export async function sendMutation(mutation, { name, type }, create = true) {
     // console.log(mutation)
     try {

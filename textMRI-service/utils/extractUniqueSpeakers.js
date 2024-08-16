@@ -1,3 +1,5 @@
+// Return an array of unique speakers from a debate
+
 export function extractUniqueSpeakers(debate) {
     const speakers = {};
 

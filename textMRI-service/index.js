@@ -39,19 +39,21 @@ app.post("/transcript", async (req, res) => {
     }
 
     try {
+        // Create the text transcript and text node
         const textTranscriptNode = await createTextTranscriptNode(transcript.name);
         data.transcript = textTranscriptNode[0];
         const textNode = await createTextNode(transcript.name, data.transcript.id);
         data.text = textNode[0];
 
+        // Extract knowledge from the transcript and create a knowledge node
         let knowledge = await extractKnowledge(transcript.debate);
         knowledge = JSON.parse(knowledge);
 
         const knowledgeNode = await createKnowledgeNode(knowledge.type, knowledge.explanation, data.text.id);
-        data.knowledge = knowledgeNode[0];
+        data.knowledge = knowledgeNode[0];  
 
+        // Extract unique speakers from the transcript and create actor nodes
         const speakers = extractUniqueSpeakers(transcript.debate);
-
         for (const speaker of speakers) {
             const actor = await createActorNode(
                 speaker.name,
@@ -61,7 +63,9 @@ app.post("/transcript", async (req, res) => {
             data.actors[actor[0].name] = actor[0].id;
         }
 
+        // For each turn in the transcript, generate dynamic node sfor the turn
         for (const turn of transcript.debate) {
+            // Create a turn node and document node
             const turnNode = await createTurnNode(
                 turn.turn_number,
                 turn.content,
@@ -76,21 +80,7 @@ app.post("/transcript", async (req, res) => {
                 data.text.id
             );
 
-            let clarity = await extractClarity(turn.content);
-            clarity = JSON.parse(clarity);
-            const clarityNode = await createClarityNode(clarity, documentNode[0].id);
-
-            let humor = await extractHumor(transcript.debate[0].content);
-            humor = JSON.parse(humor);
-            const humorNode = await createHumorNode(humor, documentNode[0].id);
-
-            const result = await extractTopics(
-                Object.keys(data.topics),
-                turn.content
-            );
-            let extracted_topics = JSON.parse(result);
-            extracted_topics = extracted_topics.topics;
-            console.log(extracted_topics);
+            // Update the turn and document nodes relationships with the topics
             for (const topic of extracted_topics) {
                 if (!data.topics[topic]) {
                     const topicNode = await createTopicNode(
@@ -109,6 +99,26 @@ app.post("/transcript", async (req, res) => {
                 );
             }
 
+            // Create a clarity node and humor node
+            let clarity = await extractClarity(turn.content);
+            clarity = JSON.parse(clarity);
+            const clarityNode = await createClarityNode(clarity, documentNode[0].id);
+
+            let humor = await extractHumor(transcript.debate[0].content);
+            humor = JSON.parse(humor);
+            const humorNode = await createHumorNode(humor, documentNode[0].id);
+
+
+            // Extract topics from the turn and create topic nodes
+            const result = await extractTopics(
+                Object.keys(data.topics),
+                turn.content
+            );
+            let extracted_topics = JSON.parse(result);
+            extracted_topics = extracted_topics.topics;
+            console.log(extracted_topics);
+
+            // TODO: Create a cohesion node based on the cohesion script
         }
 
         res.status(200).send("Transcript processed successfully");

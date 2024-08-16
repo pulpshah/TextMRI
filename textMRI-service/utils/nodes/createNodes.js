@@ -1,3 +1,4 @@
+// Exports all the create nodes mutations
 export { createTextTranscriptNode } from "./mutations/create/createTextTranscript.js";
 export { createTextNode } from "./mutations/create/createText.js";
 export { createActorNode } from "./mutations/create/createActor.js";

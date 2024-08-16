@@ -1,3 +1,5 @@
+// Exports all the functions that extract data from the text
+
 export { extractClarity } from "./scripts/extractClarity.js";
 export { extractClause } from "./scripts/extractClause.js";
 export { extractDiffbot }  from "./scripts/extractDiffbot.js";
