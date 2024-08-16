@@ -9,6 +9,9 @@ import {
     createTopicNode,
     createTurnNode,
     createDocumentNode,
+    createKnowledgeNode,
+    createClarityNode,
+    createHumorNode
 } from "./utils/nodes/createNodes.js";
 import {
     updateDocumentNodeWithTopics,
@@ -17,8 +20,7 @@ import {
 import { extractUniqueSpeakers } from "./utils/extractUniqueSpeakers.js";
 import { extractTopics } from "./utils/scripts/extractTopics.js";
 import dotenv from "dotenv";
-import axios from "axios";
-// const { createRhetoricalNodes } = require('./parse');
+import { extractClarity, extractHumor, extractKnowledge } from "./utils/extractData.js";
 
 dotenv.config();
 const app = express();
@@ -37,10 +39,16 @@ app.post("/transcript", async (req, res) => {
     }
 
     try {
-        const textTranscript = await createTextTranscriptNode(transcript.name);
-        data.transcript = textTranscript[0];
-        const text = await createTextNode(transcript.name, data.transcript.id);
-        data.text = text[0];
+        const textTranscriptNode = await createTextTranscriptNode(transcript.name);
+        data.transcript = textTranscriptNode[0];
+        const textNode = await createTextNode(transcript.name, data.transcript.id);
+        data.text = textNode[0];
+
+        let knowledge = await extractKnowledge(transcript.debate);
+        knowledge = JSON.parse(knowledge);
+
+        const knowledgeNode = await createKnowledgeNode(knowledge.type, knowledge.explanation, data.text.id);
+        data.knowledge = knowledgeNode[0];
 
         const speakers = extractUniqueSpeakers(transcript.debate);
 
@@ -68,6 +76,14 @@ app.post("/transcript", async (req, res) => {
                 data.text.id
             );
 
+            let clarity = await extractClarity(turn.content);
+            clarity = JSON.parse(clarity);
+            const clarityNode = await createClarityNode(clarity, documentNode[0].id);
+            
+            let humor = await extractHumor(transcript.debate[0].content);
+            humor = JSON.parse(humor);
+            const humorNode = await createHumorNode(humor, document_id);
+
             const result = await extractTopics(
                 Object.keys(data.topics),
                 turn.content
@@ -92,8 +108,8 @@ app.post("/transcript", async (req, res) => {
                     documentNode[0].id
                 );
             }
+
         }
-        // const result = await extractSentenceData(JSON.stringify(transcript));
 
         res.status(200).send("Transcript processed successfully");
     } catch (error) {
@@ -102,20 +118,20 @@ app.post("/transcript", async (req, res) => {
     }
 });
 
-app.get("/test", async (req, res) => {
+app.post("/test", async (req, res) => {
+    const { transcript } = req.body;
+    if (!transcript) {
+        return res.status(400).json({ error: "Transcript is required" });
+    }
     try {
-        const topics = [];
-        const content =
-            "This debate is being produced by CNN and it’s coming to you live on CNN, CNN International, CNN.com, CNN Max, and CNN Espanol. This is a pivotal moment between President Joe Biden and former President Donald Trump in their rematch for the nation’s highest office. Each will make his case to the American people with just over four months until Election Day. Good evening. I’m Dana Bash, anchor of CNN’s “Inside Politics” and co-anchor of “State Of The Union.";
+        const document_id = "414f0bed-d198-4403-a836-626259c68571"
+        let humor = await extractHumor(transcript.debate[0].content);
+        humor = JSON.parse(humor);
+        console.log(humor)
 
-        const result = await extractTopics(topics, content);
-        const extracted_topics = JSON.parse(result);
-
-        for (const topic of extracted_topics) {
-            if (topics.includes(topic)) {
-            }
-        }
-        res.status(200).json(JSON.parse(result));
+        const humorNode = await createHumorNode(humor, document_id);
+        console.log(humorNode)
+        res.status(200).send("Test ran successfully");
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({ error: "Internal Server Error: \n" + error });

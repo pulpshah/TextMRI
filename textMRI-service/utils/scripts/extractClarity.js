@@ -5,7 +5,7 @@ dotenv.config();
 export async function extractClarity(content) {
     return new Promise((resolve, reject) => {
         console.log('Running Python script to extract clarity ' );
-        const pythonScript = spawn('python', ['scripts/clarity_extraction.py', JSON.stringify(content)], {
+        const pythonScript = spawn('python', ['scripts/clarity_extraction.py', content], {
             env: process.env
         });
 
