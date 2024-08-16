@@ -3,6 +3,31 @@ The TextMRI API provides tools to analyze debates using technology that will eve
 
 This API can be used to retrieve statistics, information about speeches, persuasive resonance, and more. Users can select a debate and access detailed information about it, including the host, location, date, time, speakers, and their talk times. Additionally, the API provides a transcript of the debate with detailed metadata and a reference bank for relevant articles, PDFs, videos, or images.
 
+### How to run using Docker 
+**NOTE:** Please have Docker Desktop and Docker Compose installed
+
+1. run ```docker compose build```
+2. run ```docker compose up```
+3. now the neo4j-service is up and running at port 4000 and the textMRI-service is up and running at port 4001.  
+If you are trying to get queries/perform mutations you can send the request directly to the neo4j service. If you are trying to update a transcript to be generated, send it to port 4001 /transcript e.g. http://localhost:4001/transcript.  
+In the body there should be JSON sent through in the following format. 
+```json
+{
+    "transcript": {
+        "name": "your_transcript_name",
+        "debate": [
+            {
+                "speaker": "speaker_name",
+                "role": "role",
+                "content": "content",
+                "turn_number": Integer
+            }
+        ]
+    }
+}
+```
+**Note:** This might change depending on how the data is being scrapped/gathered
+
 ### Product Requirements
 1. Conversation Ingestion/processing
 2. Interactive Conversation Text/Transcripts

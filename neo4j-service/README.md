@@ -1,6 +1,6 @@
 # TextMRI
 
-## Getting started
+## Getting started locally
 
 1. Clone the repository on to your local computer
 2. run ```cd``` in the terminal to go into the repository 
