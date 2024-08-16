@@ -41,7 +41,7 @@ type Turn {
   id: ID! @id @unique
   texttranscriptMustContain: TextTranscript @relationship(type: "MUST_CONTAIN", direction: IN)
   actorSpokeIn: Actor @relationship(type: "SPOKE_IN", direction: IN)
-  talkedAboutTopic: Topic @relationship(type: "TALKED_ABOUT", direction: OUT)
+  talkedAboutTopic: [Topic!]! @relationship(type: "TALKED_ABOUT", direction: OUT)
 }
 
 type Audio {
@@ -162,7 +162,7 @@ type Document {
   mustContainClarity: Clarity @relationship(type: "MUST_CONTAIN", direction: OUT)
   containsSectionSection: Section @relationship(type: "CONTAINS_SECTION", direction: OUT)
   containsRhetoricalweight: RhetoricalWeight  @relationship(type: "CONTAINS", direction: OUT)
-  mustContainTopic: Topic @relationship(type: "MUST_CONTAIN", direction: OUT)
+  mustContainTopic: [Topic!]! @relationship(type: "MUST_CONTAIN", direction: OUT)
 }
 
 type Paragraph {
