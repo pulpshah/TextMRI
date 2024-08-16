@@ -23,5 +23,5 @@ export async function updateTurnNodeWithTopics(topic_id, turn_id) {
             }
         }
     `;
-    return sendMutation(mutation, { name: `topic id: ${turn_id} relationship`, type: "turns" }, false);
+    return sendMutation(mutation, { name: `topic id: ${turn_id} relationship for turn node`, type: "turns" }, false);
 }

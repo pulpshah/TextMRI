@@ -5,7 +5,7 @@ export async function updateDocumentNodeWithTopics(topic_id, document_id) {
         mutation {
             updateDocuments(
                 connect: { mustContainTopic: { where: { node: { id: "${topic_id}" } } } }
-                where: { id: "${turn_id}" }
+                where: { id: "${document_id}" }
             ) {
                 documents {
                     id
@@ -17,5 +17,5 @@ export async function updateDocumentNodeWithTopics(topic_id, document_id) {
             }
         }
     `;
-    return sendMutation(mutation, { name: `topic id: ${document_id} relationship`, type: "documents" }, false);
+    return sendMutation(mutation, { name: `topic id: ${document_id} relationship for document node`, type: "documents" }, false);
 }
