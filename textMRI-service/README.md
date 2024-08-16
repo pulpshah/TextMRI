@@ -16,7 +16,7 @@ Refactor the code for typescript. As this API as been expanding, the code become
 Right now, we are creating nodes dynamically where each node is created one at a time.
 One way to optimize this is to refactor the code so that it can create all the prerequisite(independent) nodes at the same time by passing an array through the mutation 
 
-**Note:** The graphql schema is based off the pulp information object on arrows.app, however the schema has been modified. The automatic schema generation on arrows.app cannot support more complex relationships like one to many(it supports many to one though). As a result, changes should be made to both the schema and arrows.app if possible to keep both similar.
+**Note:** The graphql schema is based off the pulp information object on arrows.app, however the schema has been modified. The automatic schema generation on arrows.app cannot support more complex relationships like one to many(it supports many to one though). As a result, changes should be made to both the schema and arrows.app if possible to keep both similar. [Arrows.app graph](https://drive.google.com/file/d/1AwozaGcRuQFc_vZg-Jgbn1vcd2DkOy3m/view?usp=sharing)
 
 3. **Authentication and Authorization**  
 Add Authentication so that only users that are logged in can perform queries/mutations
