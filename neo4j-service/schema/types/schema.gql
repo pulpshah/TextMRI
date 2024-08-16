@@ -352,7 +352,7 @@ type SoundStylistic {
   alliteration_explanation: String!
   assonance_explanation: String!
   consonance_explanation: String!
-  rythm_explanation: String!
+  rhythm_explanation: String!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)
 }
 
@@ -368,11 +368,11 @@ type Euphony {
 }
 
 type Cohesion {
-  Relevancy_Score: Float!
-  Continuity_Score: Float!
-  topic_transition_Score: Float!
-  Relevancy_explanation: String!
-  continuity_explanation: String!
+  topic_relevancy_score: Float!
+  topic_continuity_score: Float!
+  topic_transition_score: Float!
+  topic_relevancy_explanation: String!
+  topic_continuity_explanation: String!
   topic_transition_explanation: String!
   score: Float!
   documentMustContain: Document @relationship(type: "MUST_CONTAIN", direction: IN)

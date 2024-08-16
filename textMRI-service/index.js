@@ -79,10 +79,10 @@ app.post("/transcript", async (req, res) => {
             let clarity = await extractClarity(turn.content);
             clarity = JSON.parse(clarity);
             const clarityNode = await createClarityNode(clarity, documentNode[0].id);
-            
+
             let humor = await extractHumor(transcript.debate[0].content);
             humor = JSON.parse(humor);
-            const humorNode = await createHumorNode(humor, document_id);
+            const humorNode = await createHumorNode(humor, documentNode[0].id);
 
             const result = await extractTopics(
                 Object.keys(data.topics),
