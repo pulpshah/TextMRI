@@ -1,1 +1,1 @@
-export const API_URL = 'http://localhost:4000';
+export const API_URL = 'http://neo4j-service:4000';

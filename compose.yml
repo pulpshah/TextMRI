@@ -10,14 +10,13 @@ services:
       - app-network
     develop:
       watch:
-        - path: ./neo4j-service/package.json
-          action: rebuild
-        - path: ./neo4j-service/package-lock.json
-          action: rebuild
-        - path: ./neo4j-service
+        - action: rebuild
+          path: ./neo4j-service/package.json
+        - action: rebuild
+          path: ./neo4j-service/package-lock.json
+        - action: sync+restart
           target: /app
-          action: sync
-
+          path: ./neo4j-service
   textMRI-service: 
     depends_on: 
       - neo4j-service
@@ -33,13 +32,13 @@ services:
       - app-network
     develop:
       watch:
-        - path: ./textMRI-service/package.json
-          action: rebuild
-        - path: ./textMRI-service/package-lock.json
-          action: rebuild
-        - path: ./textMRI-service
+        - action: rebuild
+          path: ./textMRI-service/package.json
+        - action: rebuild
+          path: ./textMRI-service/package-lock.json
+        - action: sync+restart
           target: /app
-          action: sync
+          path: ./textMRI-service
 
 networks:
   app-network:
