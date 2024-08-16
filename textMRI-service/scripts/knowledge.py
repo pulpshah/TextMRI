@@ -7,8 +7,8 @@ api_key = os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key = api_key)
 
 def get_knowledge_type(text):
-
-    assistant = """You are a knowledge classifier expert. Given a text, classify it as procedural,
+    # modified prompt to fit JSON input
+    assistant = """You are a knowledge classifier expert. Given a JSON object with the speaker, turn and content, classify contents combined as procedural,
     declarative, or conditional. Your results should be returned in an RFC-8259 compliant JSON of the
     following schema:
     

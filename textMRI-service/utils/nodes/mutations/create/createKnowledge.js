@@ -5,12 +5,12 @@ export async function createKnowledgeNode(type, explanation, text_id) {
         mutation {
             createKnowledges(
                 input: {
-                type: ${type}
-                explanation: "${explanation}"
-                textMustHave: { connect: { where: { node: { id: "${text_id}" } } } }
+                    type: "${type}"
+                    explanation: "${explanation}"
+                    textMustHave: { connect: { where: { node: { id: "${text_id}" } } } }
                 }
             ) {
-                knowledge {
+                knowledges {
                     type
                     explanation
                 }
